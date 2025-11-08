@@ -137,11 +137,11 @@ function ViewUserData() {
             <div 
               className="backdrop-blur-xl border-2 rounded-lg shadow-lg p-6 h-fit max-md:p-3"
               style={{
-                background: 'rgba(36, 30, 42, 0.7)',
-                borderColor: 'rgba(139, 92, 246, 0.3)',
+                background: 'var(--color-surface)',
+                borderColor: 'var(--color-border)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
               }}
             >
               <h3 
@@ -306,13 +306,13 @@ function ViewUserData() {
                   style={{
                     background: placement?.isPlaced === true 
                       ? 'rgba(5, 150, 105, 0.2)' 
-                      : 'rgba(36, 30, 42, 0.7)',
+                      : 'var(--color-surface)',
                     borderColor: placement?.isPlaced === true
                       ? 'rgba(5, 150, 105, 0.4)'
-                      : 'rgba(139, 92, 246, 0.3)',
+                      : 'var(--color-border)',
                     backdropFilter: 'blur(20px)',
                     WebkitBackdropFilter: 'blur(20px)',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
                   }}
                 >
                   <div className=''>
@@ -503,11 +503,11 @@ function ViewUserData() {
                   <div 
                     className="backdrop-blur-xl border-2 rounded-lg shadow-lg p-6 max-md:p-3"
                     style={{
-                      background: 'rgba(36, 30, 42, 0.7)',
-                      borderColor: 'rgba(139, 92, 246, 0.3)',
+                      background: 'var(--color-surface)',
+                      borderColor: 'var(--color-border)',
                       backdropFilter: 'blur(20px)',
                       WebkitBackdropFilter: 'blur(20px)',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
                     }}
                   >
                     <div className=''>
@@ -861,11 +861,11 @@ function ViewUserData() {
                 <div 
                   className="backdrop-blur-xl border-2 rounded-lg shadow-lg p-6 h-fit max-md:p-3"
                   style={{
-                    background: 'rgba(36, 30, 42, 0.7)',
-                    borderColor: 'rgba(139, 92, 246, 0.3)',
+                    background: 'var(--color-surface)',
+                    borderColor: 'var(--color-border)',
                     backdropFilter: 'blur(20px)',
                     WebkitBackdropFilter: 'blur(20px)',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
                   }}
                 >
                   <div className=''>

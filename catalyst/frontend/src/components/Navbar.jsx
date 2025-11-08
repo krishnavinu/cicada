@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Badge from 'react-bootstrap/Badge';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -146,107 +147,133 @@ function Navbar({ isSidebarVisible, toggleSidebar }) {
   pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1);
 
   return (
-    <div 
-      className={`h-20 sticky top-0 z-10 flex justify-between items-center border-b-2 transition-all duration-500 ${
-        scrolled 
-          ? 'backdrop-blur-md shadow-lg' 
-          : 'shadow-sm'
-      } ${isSidebarVisible ? 'ml-60 px-6' : 'ml-0 px-4'}`}
+    <motion.div 
+      className={`h-20 sticky top-0 z-10 flex justify-between items-center border-b-2 ${
+        isSidebarVisible ? 'ml-60 px-6' : 'ml-0 px-4'
+      }`}
       style={{
         backgroundColor: scrolled ? `rgba(var(--color-background-rgb), 0.95)` : 'var(--color-background)',
         borderColor: 'var(--color-border)',
-        color: 'var(--color-text)'
+        color: 'var(--color-text)',
+        backdropFilter: scrolled ? 'blur(10px)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'blur(10px)' : 'none',
       }}
+      animate={{
+        boxShadow: scrolled ? '0 4px 20px rgba(0, 0, 0, 0.1)' : '0 2px 10px rgba(0, 0, 0, 0.05)',
+      }}
+      transition={{ duration: 0.3 }}
     >
       <div className="flex items-center gap-4">
-        <button 
+        <motion.button
           onClick={toggleSidebar}
-          className="p-2 rounded-lg transition-all duration-300 hover:scale-110 group"
+          className="p-2 rounded-lg"
           style={{
             backgroundColor: 'transparent'
           }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-surface)'}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          whileHover={{ scale: 1.1, backgroundColor: 'var(--color-surface)' }}
+          whileTap={{ scale: 0.95 }}
         >
-          <FaBars 
-            size={24} 
-            className="transition-colors duration-300" 
-            style={{
-              color: 'var(--color-text-secondary)'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-primary)'}
-            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-text-secondary)'}
-          />
-        </button>
+          <motion.div
+            animate={{ rotate: isSidebarVisible ? 90 : 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <FaBars 
+              size={24} 
+              style={{
+                color: 'var(--color-text-secondary)'
+              }}
+            />
+          </motion.div>
+        </motion.button>
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold gradient-text" style={{
-            background: `linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)`,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
-          }}>
+          <motion.h1
+            className="text-2xl font-bold"
+            style={{
+              background: `linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             {pageName}
-          </h1>
-          <div className="h-6 w-1 rounded-full" style={{
-            background: `linear-gradient(180deg, var(--color-primary) 0%, var(--color-secondary) 100%)`
-          }}></div>
+          </motion.h1>
+          <motion.div
+            className="h-6 w-1 rounded-full"
+            style={{
+              background: `linear-gradient(180deg, var(--color-primary) 0%, var(--color-secondary) 100%)`
+            }}
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ delay: 0.2, duration: 0.3 }}
+          />
         </div>
       </div>
 
       <div className="flex items-center gap-4">
         {/* Notification Bell with Dropdown */}
         <div className="relative" ref={notificationRef}>
-          <button 
+          <motion.button
             onClick={() => setNotificationOpen(!notificationOpen)}
-            className="relative p-2 rounded-full transition-all duration-300 group"
+            className="relative p-2 rounded-full"
             style={{
               backgroundColor: notificationOpen ? 'rgba(var(--color-primary-rgb), 0.1)' : 'transparent'
             }}
-            onMouseEnter={(e) => {
-              if (!notificationOpen) {
-                e.currentTarget.style.backgroundColor = 'var(--color-surface)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!notificationOpen) {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }
-            }}
+            whileHover={{ scale: 1.1, backgroundColor: 'var(--color-surface)' }}
+            whileTap={{ scale: 0.9 }}
           >
-            <FaBell 
-              size={20} 
-              className="transition-colors duration-300"
-              style={{ 
-                color: notificationOpen ? 'var(--color-primary)' : 'var(--color-text-secondary)' 
-              }}
-            />
-            {unreadCount > 0 && (
-              <span 
-                className="absolute top-0 right-0 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold text-white animate-pulse"
+            <motion.div
+              animate={{ rotate: notificationOpen ? [0, -10, 10, -10, 0] : 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <FaBell 
+                size={20} 
                 style={{ 
-                  backgroundColor: 'var(--color-error)',
-                  minWidth: '16px',
-                  padding: '0 4px'
+                  color: notificationOpen ? 'var(--color-primary)' : 'var(--color-text-secondary)' 
                 }}
-              >
-                {unreadCount > 9 ? '9+' : unreadCount}
-              </span>
-            )}
-          </button>
+              />
+            </motion.div>
+            <AnimatePresence>
+              {unreadCount > 0 && (
+                <motion.span
+                  className="absolute top-0 right-0 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                  style={{ 
+                    backgroundColor: 'var(--color-error)',
+                    minWidth: '16px',
+                    padding: '0 4px',
+                    height: '16px',
+                  }}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ type: 'spring', stiffness: 500 }}
+                >
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
 
           {/* Notification Dropdown */}
-          {notificationOpen && (
-            <div 
-              className="absolute right-0 mt-2 w-80 rounded-lg shadow-2xl border-2 z-50"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                borderColor: 'var(--color-border)',
-                maxHeight: '400px',
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column'
-              }}
-            >
+          <AnimatePresence>
+            {notificationOpen && (
+              <motion.div
+                className="absolute right-0 mt-2 w-80 rounded-lg shadow-2xl border-2 z-50"
+                style={{
+                  backgroundColor: 'var(--color-surface)',
+                  borderColor: 'var(--color-border)',
+                  maxHeight: '400px',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
               <div 
                 className="px-4 py-3 border-b-2 flex justify-between items-center"
                 style={{
@@ -276,60 +303,77 @@ function Navbar({ isSidebarVisible, toggleSidebar }) {
                   </div>
                 ) : notifications.length > 0 ? (
                   <div className="p-2">
-                    {currentUser?.role === 'student' ? (
-                      // Student notifications - job postings
-                      notifications.map((job, index) => (
-                        <Link
-                          key={index}
-                          to={`/student/job/${job._id}`}
-                          className="block p-3 rounded-lg mb-2 transition-all duration-300 hover:translate-x-1 no-underline border-l-4"
-                          style={{
-                            borderLeftColor: (new Date() - new Date(job?.postedAt)) / (1000 * 60 * 60 * 24) <= 2 
-                              ? 'var(--color-success)' 
-                              : 'transparent',
-                            backgroundColor: 'transparent'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(var(--color-primary-rgb), 0.1)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                          }}
-                        >
-                          <div className="flex items-start gap-2">
-                            <i className="fa-solid fa-briefcase mt-1" style={{ color: 'var(--color-primary)' }}></i>
-                            <div className="flex-1">
-                              <p className="font-semibold mb-1" style={{ color: 'var(--color-text)' }}>
-                                {job.jobTitle}
-                                {(new Date() - new Date(job?.postedAt)) / (1000 * 60 * 60 * 24) <= 2 && (
-                                  <Badge className="ml-2" style={{ 
-                                    background: 'linear-gradient(135deg, var(--color-success) 0%, #059669 100%)',
-                                    color: '#ffffff'
-                                  }}>
-                                    New
-                                  </Badge>
-                                )}
-                              </p>
-                              <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                                {job.company?.companyName || 'Company'}
-                              </p>
-                              <p className="text-xs mt-1" style={{ color: 'var(--color-text-secondary)' }}>
-                                {new Date(job.postedAt).toLocaleDateString()} {new Date(job.postedAt).toLocaleTimeString()}
-                              </p>
-                            </div>
-                          </div>
-                        </Link>
-                      ))
-                    ) : (
+                    <AnimatePresence>
+                      {currentUser?.role === 'student' ? (
+                        // Student notifications - job postings
+                        notifications.map((job, index) => {
+                          const isNew = (new Date() - new Date(job?.postedAt)) / (1000 * 60 * 60 * 24) <= 2;
+                          return (
+                            <motion.div
+                              key={job._id || index}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: 20 }}
+                              transition={{ delay: index * 0.05 }}
+                            >
+                              <motion.div
+                                whileHover={{ x: 4 }}
+                              >
+                                <Link
+                                  to={`/student/job/${job._id}`}
+                                  className="block p-3 rounded-lg mb-2 no-underline border-l-4 transition-colors duration-300"
+                                  style={{
+                                    borderLeftColor: isNew ? 'var(--color-success)' : 'transparent',
+                                    backgroundColor: 'transparent'
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'rgba(var(--color-primary-rgb), 0.1)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                  }}
+                                >
+                                  <div className="flex items-start gap-2">
+                                    <i className="fa-solid fa-briefcase mt-1" style={{ color: 'var(--color-primary)' }}></i>
+                                    <div className="flex-1">
+                                      <p className="font-semibold mb-1" style={{ color: 'var(--color-text)' }}>
+                                        {job.jobTitle}
+                                        {isNew && (
+                                          <Badge className="ml-2" style={{ 
+                                            background: 'linear-gradient(135deg, var(--color-success) 0%, #059669 100%)',
+                                            color: '#ffffff'
+                                          }}>
+                                            New
+                                          </Badge>
+                                        )}
+                                      </p>
+                                      <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                                        {job.company?.companyName || 'Company'}
+                                      </p>
+                                      <p className="text-xs mt-1" style={{ color: 'var(--color-text-secondary)' }}>
+                                        {new Date(job.postedAt).toLocaleDateString()} {new Date(job.postedAt).toLocaleTimeString()}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </Link>
+                              </motion.div>
+                            </motion.div>
+                          );
+                        })
+                      ) : (
                       // TPO/Management notifications - student applications
                       notifications.map((student, index) => (
-                        <div
+                        <motion.div
                           key={index}
                           className="p-3 rounded-lg mb-2 border-l-4"
                           style={{
                             borderLeftColor: 'var(--color-warning)',
                             backgroundColor: 'rgba(var(--color-warning-rgb), 0.05)'
                           }}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 20 }}
+                          transition={{ delay: index * 0.05 }}
                         >
                           <p className="font-semibold mb-1" style={{ color: 'var(--color-text)' }}>
                             {student.studentName}
@@ -353,9 +397,10 @@ function Navbar({ isSidebarVisible, toggleSidebar }) {
                               {job.jobTitle} - {job.status}
                             </Link>
                           ))}
-                        </div>
+                        </motion.div>
                       ))
                     )}
+                    </AnimatePresence>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-8" style={{ color: 'var(--color-text-secondary)' }}>
@@ -364,69 +409,71 @@ function Navbar({ isSidebarVisible, toggleSidebar }) {
                   </div>
                 )}
               </div>
-            </div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* User Profile Menu */}
         <div className="relative" ref={userMenuRef}>
-          <button 
+          <motion.button
             onClick={() => setUserMenuOpen(!userMenuOpen)}
-            className="flex items-center gap-2 p-2 rounded-lg transition-all duration-300 group"
+            className="flex items-center gap-2 p-2 rounded-lg"
             style={{
               backgroundColor: userMenuOpen ? 'rgba(var(--color-primary-rgb), 0.1)' : 'transparent'
             }}
-            onMouseEnter={(e) => {
-              if (!userMenuOpen) {
-                e.currentTarget.style.backgroundColor = 'var(--color-surface)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!userMenuOpen) {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }
-            }}
+            whileHover={{ scale: 1.05, backgroundColor: 'var(--color-surface)' }}
+            whileTap={{ scale: 0.95 }}
           >
             <div className="relative">
-              <img 
+              <motion.img
                 src={userProfile}
                 alt="Profile"
-                className="w-8 h-8 rounded-full object-cover border-2 transition-all duration-300"
+                className="w-8 h-8 rounded-full object-cover border-2"
                 style={{
                   borderColor: userMenuOpen ? 'var(--color-primary)' : 'transparent'
                 }}
                 onError={(e) => {
                   e.target.src = '/default-profile.png';
                 }}
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: 'spring', stiffness: 400 }}
               />
-              <div 
+              <motion.div
                 className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2"
                 style={{
                   backgroundColor: 'var(--color-success)',
                   borderColor: 'var(--color-background)'
                 }}
-              ></div>
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
             </div>
-            <span 
-              className="hidden md:block text-sm font-medium transition-colors duration-300"
-              style={{ 
+            <span
+              className="hidden md:block text-sm font-medium"
+              style={{
                 color: userMenuOpen ? 'var(--color-primary)' : 'var(--color-text-secondary)'
               }}
             >
               {userName.split(' ')[0] || 'User'}
             </span>
-          </button>
+          </motion.button>
 
           {/* User Menu Dropdown */}
-          {userMenuOpen && (
-            <div 
-              className="absolute right-0 mt-2 w-64 rounded-lg shadow-2xl border-2 z-50"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                borderColor: 'var(--color-border)',
-                overflow: 'hidden'
-              }}
-            >
+          <AnimatePresence>
+            {userMenuOpen && (
+              <motion.div
+                className="absolute right-0 mt-2 w-64 rounded-lg shadow-2xl border-2 z-50"
+                style={{
+                  backgroundColor: 'var(--color-surface)',
+                  borderColor: 'var(--color-border)',
+                  overflow: 'hidden'
+                }}
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
               {/* User Info Header */}
               <div 
                 className="px-4 py-3 border-b-2"
@@ -534,11 +581,12 @@ function Navbar({ isSidebarVisible, toggleSidebar }) {
                   <span className="font-semibold">Logout</span>
                 </button>
               </div>
-            </div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

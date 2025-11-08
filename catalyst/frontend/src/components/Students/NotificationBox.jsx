@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Badge from 'react-bootstrap/Badge';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { motion, AnimatePresence } from 'framer-motion';
+import Card from '../UI/Card';
+import Skeleton from '../UI/Skeleton';
+import EmptyState from '../UI/EmptyState';
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 function NotificationBox() {
@@ -57,136 +61,125 @@ function NotificationBox() {
 
 
   return (
-    <>
-      <div 
-        className="my-2 mx-2 w-full backdrop-blur-xl border-2 rounded-2xl py-4 px-4 shadow-xl hover:shadow-2xl transition-all duration-500 card-hover animate-fadeInUp"
-        style={{
-          background: 'rgba(36, 30, 42, 0.7)',
-          borderColor: 'rgba(139, 92, 246, 0.3)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-        }}
-      >
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-3">
-            <div 
-              className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"
-              style={{
-                background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)'
-              }}
-            >
-              <i className="fa-solid fa-bell text-white"></i>
-            </div>
-            <h3 
-              className="font-bold text-xl"
-              style={{ color: 'var(--color-text)' }}
-            >
-              Notifications
-            </h3>
-          </div>
-          <div 
-            className="w-2 h-2 rounded-full animate-pulse"
-            style={{ backgroundColor: 'var(--color-error)' }}
-          ></div>
-        </div>
+    <Card
+      className="my-2 mx-2 w-full"
+      icon={<i className="fa-solid fa-bell text-white"></i>}
+      title="Notifications"
+      action={
+        <motion.div
+          className="w-2 h-2 rounded-full"
+          style={{ backgroundColor: 'var(--color-error)' }}
+          animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+      }
+    >
+      <AnimatePresence mode="wait">
         {loading ? (
-          <div className="flex justify-center items-center h-72">
-            <div className="relative">
-              <i 
-                className="fa-solid fa-spinner fa-spin text-4xl"
-                style={{ color: 'var(--color-primary)' }}
-              ></i>
-              <div 
-                className="absolute inset-0 rounded-full blur-xl opacity-20 animate-pulse"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-              ></div>
-            </div>
-          </div>
-        ) : (
-          <div 
-            className="relative h-72 overflow-y-auto rounded-xl"
-            style={{
-              background: 'rgba(26, 21, 31, 0.4)',
-              border: '1px solid rgba(139, 92, 246, 0.2)'
-            }}
+          <motion.div
+            key="loading"
+            className="flex flex-col gap-3 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            <div className="w-full flex flex-col gap-2 p-2">
-              {jobs?.length > 0 ? (
-                jobs.map((job, index) => (
-                  <div 
-                    key={index} 
-                    className="py-3 px-3 rounded-lg transition-all duration-300 hover:translate-x-2 group cursor-pointer border-l-4 border-transparent"
-                    style={{
-                      borderLeftColor: 'transparent',
-                      backgroundColor: 'transparent'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(139, 92, 246, 0.1)';
-                      e.currentTarget.style.borderLeftColor = 'var(--color-primary)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.borderLeftColor = 'transparent';
-                    }}
-                  >
-                    <Link
-                      className="no-underline font-medium group-hover:underline transition-all duration-300 flex items-center gap-2"
-                      style={{ color: 'var(--color-text)' }}
-                      to={`/student/job/${job?._id}`}
-                      target="_blank"
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.color = 'var(--color-primary)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.color = 'var(--color-text)';
-                      }}
-                    >
-                      <i 
-                        className="fa-solid fa-briefcase text-sm group-hover:scale-110 transition-transform duration-300"
-                        style={{ color: 'var(--color-primary)' }}
-                      ></i>
-                      {job?.jobTitle}
-                      {(new Date() - new Date(job?.postedAt)) / (1000 * 60 * 60 * 24) <= 2 && (
-                        <Badge 
-                          className="border-0 animate-pulse"
-                          style={{
-                            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                            color: '#ffffff'
-                          }}
-                        >
-                          New
-                        </Badge>
-                      )}
-                    </Link>
-                    <div className="flex items-center gap-2 mt-1">
-                      <i 
-                        className="fa-solid fa-clock text-xs"
-                        style={{ color: 'var(--color-text-secondary)' }}
-                      ></i>
-                      <span 
-                        className="text-xs"
-                        style={{ color: 'var(--color-text-secondary)' }}
+            <Skeleton variant="text" width="100%" height={60} count={3} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="content"
+            className="relative h-72 overflow-y-auto rounded-xl p-2 custom-scrollbar"
+            style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {jobs?.length > 0 ? (
+              <div className="w-full flex flex-col gap-2">
+                <AnimatePresence>
+                  {jobs.map((job, index) => {
+                    const isNew = (new Date() - new Date(job?.postedAt)) / (1000 * 60 * 60 * 24) <= 2;
+
+                    return (
+                      <motion.div
+                        key={job._id || index}
+                        className="py-3 px-3 rounded-lg cursor-pointer border-l-4"
+                        style={{
+                          borderLeftColor: 'transparent',
+                          backgroundColor: 'transparent',
+                        }}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        transition={{ delay: index * 0.05 }}
+                        whileHover={{
+                          x: 8,
+                          backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                          borderLeftColor: 'var(--color-primary)',
+                        }}
                       >
-                        {new Date(job?.postedAt).toLocaleDateString('en-IN')} {new Date(job?.postedAt).toLocaleTimeString('en-IN')}
-                      </span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div 
-                  className="flex flex-col items-center justify-center h-full"
-                  style={{ color: 'var(--color-text-secondary)' }}
-                >
-                  <i className="fa-solid fa-inbox text-4xl mb-2"></i>
-                  <p>No notifications found!</p>
-                </div>
-              )}
-            </div>
-          </div>
+                        <Link
+                          className="no-underline font-medium flex items-center gap-2"
+                          style={{ color: 'var(--color-text)' }}
+                          to={`/student/job/${job?._id}`}
+                          target="_blank"
+                        >
+                          <motion.i
+                            className="fa-solid fa-briefcase text-sm"
+                            style={{ color: 'var(--color-primary)' }}
+                            whileHover={{ scale: 1.2, rotate: -5 }}
+                          />
+                          <span>{job?.jobTitle}</span>
+                          {isNew && (
+                            <motion.span
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ type: 'spring', stiffness: 500 }}
+                            >
+                              <Badge
+                                className="border-0"
+                                style={{
+                                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                                  color: '#ffffff',
+                                }}
+                              >
+                                New
+                              </Badge>
+                            </motion.span>
+                          )}
+                        </Link>
+                        <div className="flex items-center gap-2 mt-1">
+                          <i
+                            className="fa-solid fa-clock text-xs"
+                            style={{ color: 'var(--color-text-secondary)' }}
+                          />
+                          <span
+                            className="text-xs"
+                            style={{ color: 'var(--color-text-secondary)' }}
+                          >
+                            {new Date(job?.postedAt).toLocaleDateString('en-IN')}{' '}
+                            {new Date(job?.postedAt).toLocaleTimeString('en-IN')}
+                          </span>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <EmptyState
+                icon="fa-inbox"
+                title="No notifications found"
+                description="You don't have any job notifications at the moment. New job postings will appear here."
+              />
+            )}
+          </motion.div>
         )}
-      </div>
-    </>
+      </AnimatePresence>
+    </Card>
   )
 }
 

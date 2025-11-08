@@ -6,6 +6,8 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Toast from '../Toast';
 import ModalBox from '../Modal';
+import AnimatedBackground from '../UI/AnimatedBackground';
+import GlassCard from '../UI/GlassCard';
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 function AddInternship() {
@@ -148,21 +150,29 @@ function AddInternship() {
       {
         loading ? (
           <div className="flex justify-center h-72 items-center">
-            <i className="fa-solid fa-spinner fa-spin text-3xl" />
+            <div className="flex flex-col items-center gap-4">
+              <i className="fa-solid fa-spinner fa-spin text-4xl text-blue-500 animate-pulse" />
+              <p className="text-gray-600 font-medium">Loading internship form...</p>
+            </div>
           </div>
         ) : (
-          <>
-            <div 
-              className="my-8 backdrop-blur-xl border-2 rounded-lg shadow-lg p-6"
-              style={{
-                background: 'rgba(36, 30, 42, 0.7)',
-                borderColor: 'rgba(139, 92, 246, 0.3)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-              }}
-            >
-              <div className="grid grid-cols-2 gap-2 max-sm:grid-cols-1">
+          <div className="relative min-h-screen">
+            {/* Animated Background */}
+            <AnimatedBackground variant="default" intensity="low" />
+            
+            {/* Main Content */}
+            <div className="relative z-10 p-4 sm:p-6">
+              <GlassCard hoverable={false} glow={true} className="my-8 p-6 sm:p-8">
+                <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg bounce-icon">
+                      <i className="fa-solid fa-briefcase text-white text-lg"></i>
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-bold gradient-text">
+                      {internshipId ? 'Edit Internship' : 'Add Internship'}
+                    </h2>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 max-sm:grid-cols-1">
                 <FloatingLabel controlId="floatingCompanyName" label={
                   <>
                     <span>Company Name <span style={{ color: 'red' }}>*</span></span>
@@ -273,15 +283,22 @@ function AddInternship() {
                       onChange={handleDataChange}
                     />
                   </FloatingLabel>
+                  </div>
                 </div>
-              </div>
+                <div className="flex flex-col justify-center items-center gap-2 mt-6">
+                  <button
+                    type='submit'
+                    className="group gradient-button px-8 py-4 flex items-center gap-3"
+                  >
+                    <i className="fa-solid fa-floppy-disk group-hover:rotate-12 transition-transform duration-300" />
+                    <span>Update Internship</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  </button>
+                </div>
+                </form>
+              </GlassCard>
             </div>
-            <div className="flex flex-col justify-center items-center gap-2">
-              <Button variant="primary" type='submit' size='lg' onClick={handleSubmit}>
-                Update
-              </Button>
-            </div>
-          </>
+          </div>
         )
       }
 

@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react';
 import LandingNavbar from '../components/LandingPages/LandNavbar';
 import LandingHeroPage from '../components/LandingPages/LandHeroPage';
 import LandingAbout from '../components/LandingPages/LandAbout';
+import LandFeatures from '../components/LandingPages/LandFeatures';
+import LandStats from '../components/LandingPages/LandStats';
+import LandDemo from '../components/LandingPages/LandDemo';
+import LandTestimonials from '../components/LandingPages/LandTestimonials';
 import LandFooter from '../components/LandingPages/LandFooter';
 import Toast from '../components/Toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 
 function LandingPage() {
-  document.title = 'catalyst';
+  document.title = 'catalyst | Empowering Your Career Journey';
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -41,7 +45,11 @@ function LandingPage() {
       <div className="flex flex-col flex-wrap">
         <LandingNavbar />
         <LandingHeroPage />
-        <LandingAbout />
+        <LandFeatures id="features" />
+        <LandStats />
+        <LandDemo />
+        <LandingAbout id="about" />
+        <LandTestimonials />
         <LandFooter />
       </div>
 

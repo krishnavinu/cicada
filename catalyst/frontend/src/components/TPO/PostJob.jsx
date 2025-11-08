@@ -3,10 +3,12 @@ import JoditEditor from 'jodit-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-import FloatingLabel from 'react-bootstrap/FloatingLabel'; ``
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Toast from '../Toast';
 import ModalBox from '../Modal';
+import AnimatedBackground from '../UI/AnimatedBackground';
+import GlassCard from '../UI/GlassCard';
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 function PostJob() {
@@ -147,18 +149,38 @@ function PostJob() {
         position="bottom-end"
       />
 
-      {
-        loading ? (
-          <div className="flex justify-center h-72 items-center">
-            <i className="fa-solid fa-spinner fa-spin text-3xl" />
-          </div>
-        ) : (
-          <>
-            <div className="">
-              <form onSubmit={handleSubmit}>
-                <div className="my-8 text-base backdrop-blur-md bg-white/30 border border-white/20 rounded-lg shadow shadow-red-400 p-6 max-sm:text-sm max-md:p-3">
-                  <div className="grid grid-cols-1 gap-2">
-                    {/* company details  */}
+      <div className="relative min-h-screen">
+        <AnimatedBackground intensity="low" />
+        <div className="relative z-10 p-6">
+          {
+            loading ? (
+              <div className="flex justify-center h-72 items-center">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+                  <p className="text-gray-600 font-medium">Loading form...</p>
+                </div>
+              </div>
+            ) : (
+              <div className="max-w-5xl mx-auto">
+                <form onSubmit={handleSubmit}>
+                  {/* Header */}
+                  <div className="mb-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg bounce-icon">
+                        <i className="fa-solid fa-briefcase text-white text-lg"></i>
+                      </div>
+                      <h2 className="text-3xl font-bold gradient-text">Post Job</h2>
+                    </div>
+                  </div>
+
+                  {/* Company Selection */}
+                  <GlassCard hoverable={false} glow={true} className="mb-6 p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2">
+                        <i className="fa-solid fa-building text-white"></i>
+                      </div>
+                      <h3 className="text-xl font-bold gradient-text">Company Details</h3>
+                    </div>
                     <FloatingLabel controlId="floatingSelectDifficulty" label={
                       <>
                         <span>Select Company Name <span className='text-red-500'>*</span></span>
@@ -175,7 +197,6 @@ function PostJob() {
                             company: e.target.value
                           });
                         }}
-
                       >
                         <option disabled value='' className='text-gray-400'>Select Company Name</option>
                         {
@@ -185,13 +206,18 @@ function PostJob() {
                         }
                       </Form.Select>
                     </FloatingLabel>
-                  </div>
-                </div>
+                  </GlassCard>
 
-                <div className="my-8 text-base backdrop-blur-md bg-white/30 border border-white/20 rounded-lg shadow shadow-red-400 p-6 max-sm:text-sm max-md:p-3">
-                  <div className="flex flex-col">
-                    {/* job details  */}
-                    <div className="grid grid-cols-3 gap-2 max-md:grid-cols-1">
+                  {/* Job Details */}
+                  <GlassCard hoverable={false} glow={true} className="mb-6 p-6">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2">
+                        <i className="fa-solid fa-file-alt text-white"></i>
+                      </div>
+                      <h3 className="text-xl font-bold gradient-text">Job Details</h3>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                       <FloatingLabel controlId="floatingJobTitle" label={
                         <>
                           <span>Job Title <span className='text-red-500'>*</span></span>
@@ -203,7 +229,6 @@ function PostJob() {
                           name='jobTitle'
                           value={data?.jobTitle || ''}
                           onChange={handleDataChange}
-
                         />
                       </FloatingLabel>
 
@@ -223,7 +248,6 @@ function PostJob() {
                               handleDataChange(e);
                             }
                           }}
-
                         />
                       </FloatingLabel>
 
@@ -238,70 +262,86 @@ function PostJob() {
                           name='applicationDeadline'
                           value={formatDate(data?.applicationDeadline) || ''}
                           onChange={handleDataChange}
-
                         />
                       </FloatingLabel>
                     </div>
 
-                    {/* text editor  */}
-                    <div className="py-6">
-                      <label className=''>
-                        Enter Job Description <span className="text-red-500">*</span>
-                      </label>
-                      <JoditEditor
-                        ref={editor}
-                        tabIndex={1}
-                        value={data?.jobDescription || ''}
-                        onChange={(e) => {
-                          setData({
-                            ...data,
-                            jobDescription: e
-                          })
-                        }}
-                      />
+                    {/* Text Editors */}
+                    <div className="space-y-6">
+                      <div>
+                        <label className='text-gray-700 font-semibold mb-2 block'>
+                          Enter Job Description <span className="text-red-500">*</span>
+                        </label>
+                        <JoditEditor
+                          ref={editor}
+                          tabIndex={1}
+                          value={data?.jobDescription || ''}
+                          onChange={(e) => {
+                            setData({
+                              ...data,
+                              jobDescription: e
+                            })
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label className='text-gray-700 font-semibold mb-2 block'>
+                          Enter Eligibility <span className="text-red-500">*</span>
+                        </label>
+                        <JoditEditor
+                          ref={editor}
+                          tabIndex={2}
+                          value={data?.eligibility || ''}
+                          onChange={(e) => {
+                            setData({
+                              ...data,
+                              eligibility: e
+                            })
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label className='text-gray-700 font-semibold mb-2 block'>
+                          Enter Process To Apply <span className="text-red-500">*</span>
+                        </label>
+                        <JoditEditor
+                          ref={editor}
+                          tabIndex={3}
+                          value={data?.howToApply || ''}
+                          onChange={(e) => {
+                            setData({
+                              ...data,
+                              howToApply: e
+                            })
+                          }}
+                        />
+                      </div>
                     </div>
-                    <div className="py-6">
-                      <label className=''>
-                        Enter Eligibility <span className="text-red-500">*</span>
-                      </label>
-                      <JoditEditor
-                        ref={editor}
-                        tabIndex={2}
-                        value={data?.eligibility || ''}
-                        onChange={(e) => {
-                          setData({
-                            ...data,
-                            eligibility: e
-                          })
-                        }}
-                      />
-                    </div>
-                    <div className="py-6">
-                      <label className=''>
-                        Enter Process To Apply <span className="text-red-500">*</span>
-                      </label>
-                      <JoditEditor
-                        ref={editor}
-                        tabIndex={3}
-                        value={data?.howToApply || ''}
-                        onChange={(e) => {
-                          setData({
-                            ...data,
-                            howToApply: e
-                          })
-                        }}
-                      />
-                    </div>
+                  </GlassCard>
+
+                  {/* Submit Button */}
+                  <div className="flex justify-center">
+                    <Button 
+                      variant="primary" 
+                      type='submit' 
+                      size='lg'
+                      className="gradient-button px-8 py-3 text-lg font-semibold"
+                      style={{
+                        background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
+                        border: 'none',
+                        color: '#ffffff'
+                      }}
+                    >
+                      <i className="fa-solid fa-paper-plane mr-2"></i>
+                      POST JOB
+                    </Button>
                   </div>
-                </div>
-                <div className="flex flex-col justify-center items-center gap-2">
-                  <Button variant="primary" type='submit' size='lg'>POST</Button>
-                </div>
-              </form>
-            </div>
-          </>
-        )
-      }
+                </form>
+              </div>
+            )
+          }
+        </div>
+      </div>
 
       {/* ModalBox Component for Delete Confirmation */}
       <ModalBox

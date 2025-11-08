@@ -43,14 +43,31 @@ function LandAbout() {
   return (
     <div
       id="about"
-      className="bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 py-20 scroll-mt-24 relative overflow-hidden"
+      className="bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 py-24 scroll-mt-24 relative overflow-hidden"
     >
-      {/* Background decoration */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl animate-float"></div>
-        <div className="absolute top-0 right-0 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl animate-float" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-0 left-1/2 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+      {/* Enhanced background decoration */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl animate-float"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl animate-float" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl animate-float" style={{ animationDelay: '0.5s' }}></div>
       </div>
+      
+      {/* Additional particles */}
+      {[...Array(25)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full bg-gradient-to-r from-purple-300/30 to-pink-300/30 animate-float"
+          style={{
+            width: `${3 + Math.random() * 4}px`,
+            height: `${3 + Math.random() * 4}px`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 3}s`,
+            animationDuration: `${4 + Math.random() * 3}s`,
+          }}
+        />
+      ))}
 
       <div className="relative z-10 max-w-7xl mx-auto px-4">
         <div className="text-center mb-16 animate-fadeInDown">

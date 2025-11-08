@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import NoticeBox from '../../components/NoticeBox';
 import NotificationBox from '../../components/Students/NotificationBox';
+import Card from '../../components/UI/Card';
+import Button from '../../components/UI/Button';
+import AnimatedBackground from '../../components/UI/AnimatedBackground';
+import GlassCard from '../../components/UI/GlassCard';
 import axios from 'axios';
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -42,65 +47,106 @@ function Home() {
   };
 
   return (
-    <>
-      {/* Enhanced Resume Builder Prompt */}
-      {!resumeStatus.loading && (!resumeStatus.exists || !resumeStatus.complete) && (
-        <div 
-          className="mb-6 p-6 border-2 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 animate-fadeInDown card-hover relative overflow-hidden group"
-          style={{
-            background: `linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.1) 0%, rgba(var(--color-secondary-rgb), 0.1) 100%)`,
-            borderColor: 'var(--color-primary)',
-            color: 'var(--color-text)'
-          }}
-        >
-          {/* Animated background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
-          
-          <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-full p-3 shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                <i className="fa-solid fa-file-alt text-white text-2xl"></i>
-              </div>
-              <div>
-                <h3 
-                  className="text-xl font-bold transition-colors duration-300"
-                  style={{ color: 'var(--color-text)' }}
-                >
-                  {!resumeStatus.exists ? 'Create Your Resume' : 'Complete Your Resume'}
-                </h3>
-                <p 
-                  className="text-sm mt-1"
-                  style={{ color: 'var(--color-text-secondary)' }}
-                >
-                  {!resumeStatus.exists 
-                    ? 'Your resume has been created automatically! Fill it out to start applying for jobs.'
-                    : 'Your resume is incomplete. Complete it to improve your job applications.'}
-                </p>
-              </div>
-            </div>
-            <Link
-              to="/student/resume-builder"
-              className="relative overflow-hidden px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg hover:shadow-xl hover:scale-105 hover:-translate-y-1 group"
+    <div className="relative min-h-screen">
+      {/* Animated Background */}
+      <AnimatedBackground variant="default" intensity="medium" />
+      
+      {/* Main Content */}
+      <div className="relative z-10 p-4 sm:p-6 lg:p-8">
+        {/* Enhanced Resume Builder Prompt with Custom Components */}
+        <AnimatePresence>
+          {!resumeStatus.loading && (!resumeStatus.exists || !resumeStatus.complete) && (
+            <motion.div
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ duration: 0.5, type: 'spring', stiffness: 200 }}
+              className="mb-6 sm:mb-8"
             >
-              <span className="relative z-10 flex items-center gap-2">
-                {!resumeStatus.exists ? 'Create Resume' : 'Complete Resume'}
-                <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform duration-300"></i>
-              </span>
-              <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-            </Link>
-          </div>
-        </div>
-      )}
+              <GlassCard
+                hoverable={true}
+                glow={true}
+                gradient={true}
+                className="p-6 sm:p-8"
+              >
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6">
+                <div className="flex items-center gap-4 md:gap-6 flex-1">
+                  <motion.div
+                    className="bg-gradient-to-br from-blue-500 via-purple-600 to-pink-600 rounded-2xl p-4 sm:p-5 shadow-lg ring-4 ring-blue-100/50 hover:ring-blue-200/50 transition-all duration-300"
+                    whileHover={{ scale: 1.1, rotate: 12 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  >
+                    <i className="fa-solid fa-file-alt text-white text-2xl sm:text-3xl"></i>
+                  </motion.div>
+                  <div className="flex-1">
+                    <h3
+                      className="text-xl sm:text-2xl font-bold mb-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+                    >
+                      {!resumeStatus.exists ? 'Create Your Resume' : 'Complete Your Resume'}
+                    </h3>
+                    <p
+                      className="text-sm sm:text-base text-gray-600 leading-relaxed"
+                      style={{ color: 'var(--color-text-secondary)' }}
+                    >
+                      {!resumeStatus.exists
+                        ? 'Your resume has been created automatically! Fill it out to start applying for jobs.'
+                        : 'Your resume is incomplete. Complete it to improve your job applications.'}
+                    </p>
+                  </div>
+                </div>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full md:w-auto"
+                >
+                  <Link to="/student/resume-builder" className="block">
+                    <Button
+                      variant="primary"
+                      icon={<i className="fa-solid fa-arrow-right"></i>}
+                      iconPosition="right"
+                      className="w-full md:w-auto bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 shadow-lg hover:shadow-glow-lg transition-all duration-300"
+                    >
+                      {!resumeStatus.exists ? 'Create Resume' : 'Complete Resume'}
+                    </Button>
+                  </Link>
+                </motion.div>
+              </div>
+              </GlassCard>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-      <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeInUp`}>
-        <div className="transform transition-all duration-500 hover:scale-105">
-          <NotificationBox />
-        </div>
-        <div className="transform transition-all duration-500 hover:scale-105">
-          <NoticeBox />
-        </div>
+        {/* Enhanced Dashboard Cards Grid with Custom Components */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <motion.div
+            initial={{ opacity: 0, x: -20, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.5, type: 'spring' }}
+            className="floating-card"
+          >
+            <div className="glow-border">
+              <NotificationBox />
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ delay: 0.4, duration: 0.5, type: 'spring' }}
+            className="floating-card"
+          >
+            <div className="glow-border">
+              <NoticeBox />
+            </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </>
+    </div>
   );
 }
 

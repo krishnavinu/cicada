@@ -7,6 +7,8 @@ import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import Toast from '../Toast';
 import UploadResume from './UploadResume';
+import AnimatedBackground from '../UI/AnimatedBackground';
+import GlassCard from '../UI/GlassCard';
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 
@@ -138,7 +140,10 @@ function UpdatePlacementProfile() {
       {
         loading ? (
           <div className="flex justify-center h-72 items-center">
-            <i className="fa-solid fa-spinner fa-spin text-3xl" />
+            <div className="flex flex-col items-center gap-4">
+              <i className="fa-solid fa-spinner fa-spin text-4xl text-blue-500 animate-pulse" />
+              <p className="text-gray-600 font-medium">Loading profile...</p>
+            </div>
           </div>
         ) : (
           <>
@@ -152,27 +157,31 @@ function UpdatePlacementProfile() {
             />
 
 
-            <div className=''>
-              <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-2 gap-4 my-4 text-base max-sm:text-sm">
-                  {/* basic info  */}
-                  <div 
-                    className="grid backdrop-blur-xl border-2 rounded-lg shadow-lg p-6 max-md:col-span-2"
-                    style={{
-                      background: 'rgba(36, 30, 42, 0.7)',
-                      borderColor: 'rgba(139, 92, 246, 0.3)',
-                      backdropFilter: 'blur(20px)',
-                      WebkitBackdropFilter: 'blur(20px)',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-                    }}
-                  >
-                    <span 
-                      className='text-2xl max-sm:text-xl font-bold'
-                      style={{ color: 'var(--color-text)' }}
+            <div className="relative min-h-screen">
+              {/* Animated Background */}
+              <AnimatedBackground variant="default" intensity="low" />
+              
+              {/* Main Content */}
+              <div className="relative z-10 p-4 sm:p-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 my-4 text-base max-sm:text-sm">
+                    {/* Enhanced basic info with Custom Glass Card */}
+                    <GlassCard
+                      hoverable={true}
+                      glow={true}
+                      className="p-6 sm:p-8"
                     >
-                      Basic Details
-                    </span>
-                    <div className="flex flex-col justify-between py-2">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg">
+                        <i className="fa-solid fa-user text-white text-lg"></i>
+                      </div>
+                      <span 
+                        className='text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent'
+                      >
+                        Basic Details
+                      </span>
+                    </div>
+                    <div className="flex flex-col justify-between py-2 mt-4">
                       {/* Basic Info */}
                       <div className="flex justify-between">
                         <div className="space-y-4">
@@ -229,9 +238,16 @@ function UpdatePlacementProfile() {
                           )}
                         </div>
 
-                        {/* Profile Picture */}
-                        <Col xs={5} md={4} className="flex justify-end items-start rounded">
-                          <Image src={userData?.profile} thumbnail />
+                        {/* Enhanced Profile Picture with Tailwind */}
+                        <Col xs={5} md={4} className="flex justify-end items-start">
+                          <div className="relative group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl"></div>
+                            <Image 
+                              src={userData?.profile} 
+                              thumbnail 
+                              className="rounded-xl ring-4 ring-blue-100/50 group-hover:ring-blue-300/50 transition-all duration-300 transform group-hover:scale-105 shadow-lg" 
+                            />
+                          </div>
                         </Col>
                       </div>
                       <div className="flex items-center">
@@ -239,24 +255,15 @@ function UpdatePlacementProfile() {
                         <UploadResume fetchCurrentUserData={fetchCurrentUserData} /> {/* passing function to update userData */}
                         {(userData?.studentProfile?.resume !== "undefined") && (
                           <div className="py-2 px-2">
-                            <span 
-                              className='py-1 pr-2 rounded cursor-pointer transition-all duration-300'
-                              style={{
-                                background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
-                                color: '#ffffff'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.opacity = '0.9';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.opacity = '1';
-                              }}
+                            <a 
+                              href={userData?.studentProfile?.resume} 
+                              target='_blank' 
+                              rel='noopener noreferrer'
+                              className='inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-medium shadow-lg hover:shadow-glow-lg transition-all duration-300 hover:scale-105 active:scale-95'
                             >
-                              <a href={userData?.studentProfile?.resume} target='_blanck' className='no-underline text-white'>
-                                <i className="fa-regular fa-eye px-2" />
-                                View Resume
-                              </a>
-                            </span>
+                              <i className="fa-regular fa-eye" />
+                              View Resume
+                            </a>
                             <p 
                               className='text-sm mt-1'
                               style={{ color: 'var(--color-text-secondary)' }}
@@ -267,25 +274,24 @@ function UpdatePlacementProfile() {
                         )}
                       </div>
                     </div>
-                  </div>
+                    </GlassCard>
 
-                  {/* college info  */}
-                  <div 
-                    className="backdrop-blur-xl border-2 rounded-lg shadow-lg p-6 max-md:col-span-2"
-                    style={{
-                      background: 'rgba(36, 30, 42, 0.7)',
-                      borderColor: 'rgba(139, 92, 246, 0.3)',
-                      backdropFilter: 'blur(20px)',
-                      WebkitBackdropFilter: 'blur(20px)',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-                    }}
+                  {/* Enhanced college info with Custom Glass Card */}
+                  <GlassCard
+                    hoverable={true}
+                    glow={true}
+                    className="p-6 sm:p-8 max-md:col-span-2"
                   >
-                    <span 
-                      className='text-2xl max-sm:text-xl font-bold'
-                      style={{ color: 'var(--color-text)' }}
-                    >
-                      College Information
-                    </span>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg">
+                        <i className="fa-solid fa-graduation-cap text-white text-lg"></i>
+                      </div>
+                      <span 
+                        className='text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent'
+                      >
+                        College Information
+                      </span>
+                    </div>
                     <div className="grid grid-cols-2">
                       {/* semester sgpa  */}
                       <div className="grid grid-cols-2 gap-2">
@@ -447,26 +453,25 @@ function UpdatePlacementProfile() {
                         }
                       </div>
                     </div>
-                  </div>
+                    </GlassCard>
 
-                  {/* past qualification  */}
-                  <div 
-                    className="col-span-2 backdrop-blur-xl border-2 rounded-lg shadow-lg p-6"
-                    style={{
-                      background: 'rgba(36, 30, 42, 0.7)',
-                      borderColor: 'rgba(139, 92, 246, 0.3)',
-                      backdropFilter: 'blur(20px)',
-                      WebkitBackdropFilter: 'blur(20px)',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-                    }}
-                  >
-                    <span 
-                      className='text-2xl max-sm:text-xl font-bold'
-                      style={{ color: 'var(--color-text)' }}
+                    {/* Enhanced Past Qualification with Custom Glass Card */}
+                    <GlassCard
+                      hoverable={true}
+                      glow={true}
+                      className="p-6 sm:p-8 col-span-2"
                     >
-                      Past Qualification
-                    </span>
-                    <div className="grid grid-cols-3 max-sm:grid-cols-1">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg">
+                        <i className="fa-solid fa-certificate text-white text-lg"></i>
+                      </div>
+                      <span 
+                        className='text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent'
+                      >
+                        Past Qualification
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 max-sm:grid-cols-1 mt-4">
                       <div className="px-2 py-3 flex flex-col gap-2">
                         <FloatingLabel controlId="floatingSelectSSC" label="SSC Board Name">
                           <Form.Select
@@ -701,23 +706,20 @@ function UpdatePlacementProfile() {
                         </FloatingLabel>
                       </div>
                     </div>
+                    </GlassCard>
                   </div>
-                </div>
-                <div
-                  className="flex flex-col justify-center items-center gap-2"
-                  onMouseOver={(e) => {
-                    e.target.querySelector('Button i').classList.add('fa-beat');
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.querySelector('Button i').classList.remove('fa-beat');
-                  }}
-                >
-                  <Button variant="primary" type='submit' size='lg'>
-                    <i className="fa-regular fa-floppy-disk mr-2" />
-                    Save
-                  </Button>
+                <div className="flex flex-col justify-center items-center gap-2 mt-8">
+                  <button
+                    type='submit'
+                    className="group gradient-button px-8 py-4 flex items-center gap-3"
+                  >
+                    <i className="fa-regular fa-floppy-disk group-hover:rotate-12 transition-transform duration-300" />
+                    <span>Save Changes</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  </button>
                 </div>
               </form>
+              </div>
             </div>
           </>
         )

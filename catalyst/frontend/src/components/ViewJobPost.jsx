@@ -203,12 +203,21 @@ function ViewJobPost() {
                   <Accordion defaultActiveKey={['0']} alwaysOpen className='shadow-xl rounded-xl overflow-hidden'>
                     <Accordion.Item 
                       eventKey="0"
-                      className="border-2 border-gray-200 rounded-xl overflow-hidden mb-4 hover:border-blue-300 transition-all duration-300"
+                      className="border-2 rounded-xl overflow-hidden mb-4 transition-all duration-300"
+                      style={{
+                        borderColor: 'var(--color-border)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-primary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                      }}
                     >
                       <Accordion.Header className="bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 transition-all duration-300">
                         <div className="flex items-center gap-3">
                           <i className="fa-solid fa-building text-blue-500"></i>
-                          <span className="font-semibold text-gray-800">Company Details</span>
+                          <span className="font-semibold" style={{ color: 'var(--color-text)' }}>Company Details</span>
                         </div>
                       </Accordion.Header>
                       <Accordion.Body className="bg-white animate-fadeIn">
@@ -217,7 +226,7 @@ function ViewJobPost() {
                           <h3 className='text-3xl text-center border-b-2 py-4 mb-4'>
                             {company?.companyName}
                           </h3>
-                          <div className="border-b-2 px-2 pb-4 text-gray-500 text-justify leading-5">
+                          <div className="border-b-2 px-2 pb-4 text-justify leading-5" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>
                             {company?.companyDescription}
                           </div>
                           <div className="flex justify-between p-2 border-b-2 my-2">
@@ -281,12 +290,21 @@ function ViewJobPost() {
                       <Accordion defaultActiveKey={['3']} alwaysOpen className='shadow-xl rounded-xl overflow-hidden'>
                         <Accordion.Item 
                           eventKey="3"
-                          className="border-2 border-gray-200 rounded-xl overflow-hidden mb-4 hover:border-green-300 transition-all duration-300"
+                          className="border-2 rounded-xl overflow-hidden mb-4 transition-all duration-300"
+                          style={{
+                            borderColor: 'var(--color-border)'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--color-success)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--color-border)';
+                          }}
                         >
                           <Accordion.Header className="bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 transition-all duration-300">
                             <div className="flex items-center gap-3">
                               <i className="fa-solid fa-users text-green-500"></i>
-                              <span className="font-semibold text-gray-800">Applicants Applied</span>
+                              <span className="font-semibold" style={{ color: 'var(--color-text)' }}>Applicants Applied</span>
                             </div>
                           </Accordion.Header>
                           <Accordion.Body className="bg-white animate-fadeIn">
@@ -364,12 +382,21 @@ function ViewJobPost() {
                 <Accordion defaultActiveKey={['1']} alwaysOpen className='shadow-xl rounded-xl overflow-hidden'>
                   <Accordion.Item 
                     eventKey="1"
-                    className="border-2 border-gray-200 rounded-xl overflow-hidden mb-4 hover:border-purple-300 transition-all duration-300"
+                    className="border-2 rounded-xl overflow-hidden mb-4 transition-all duration-300"
+                    style={{
+                      borderColor: 'var(--color-border)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--color-secondary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                    }}
                   >
                     <Accordion.Header className="bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 transition-all duration-300">
                       <div className="flex items-center gap-3">
                         <i className="fa-solid fa-briefcase text-purple-500"></i>
-                        <span className="font-semibold text-gray-800">Job Details</span>
+                        <span className="font-semibold" style={{ color: 'var(--color-text)' }}>Job Details</span>
                       </div>
                     </Accordion.Header>
                     <Accordion.Body className="bg-white animate-fadeIn">

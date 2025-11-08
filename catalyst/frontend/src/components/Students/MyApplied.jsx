@@ -5,6 +5,7 @@ import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import GlassCard from '../UI/GlassCard';
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 function MyApplied() {
@@ -68,18 +69,48 @@ function MyApplied() {
   );
 
   return (
-    <>
+    <div className="relative min-h-screen">
+      {/* Animated Background */}
+      <div className="animated-bg-container fixed inset-0 -z-10">
+        <div className="mesh-gradient-bg"></div>
+        <div className="particle-bg">
+          {[...Array(30)].map((_, i) => (
+            <div
+              key={`particle-${i}`}
+              className="absolute w-2 h-2 bg-blue-300/40 rounded-full animate-float"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+                animationDuration: `${3 + Math.random() * 2}s`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+      
+      {/* Main Content */}
+      <div className="relative z-10 p-4 sm:p-6">
       {
         loading ? (
           <TablePlaceholder />
         ) : (
-          <Table
-            striped
-            bordered
-            hover
-            responsive="sm"
-            className='my-6 rounded-lg shadow text-base max-sm:text-sm'
-          >
+          <GlassCard hoverable={false} glow={true} className="p-4 sm:p-6 overflow-hidden">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg bounce-icon">
+                <i className="fa-solid fa-briefcase text-white text-lg"></i>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold gradient-text">
+                My Applied Jobs
+              </h2>
+            </div>
+            <Table
+              striped
+              bordered
+              hover
+              responsive="sm"
+              className='rounded-lg shadow-lg text-base max-sm:text-sm overflow-hidden'
+            >
             <thead>
               <tr>
                 <th style={{ width: '6%' }}>Sr. No.</th>
@@ -153,9 +184,11 @@ function MyApplied() {
               )}
             </tbody>
           </Table>
+          </GlassCard>
         )
       }
-    </>
+      </div>
+    </div>
   )
 }
 

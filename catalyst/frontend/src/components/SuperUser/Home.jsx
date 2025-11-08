@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Badge from 'react-bootstrap/Badge';
+import AnimatedBackground from '../UI/AnimatedBackground';
+import GlassCard from '../UI/GlassCard';
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 function Home() {
@@ -30,60 +32,117 @@ function Home() {
   }, []);
 
   return (
-    <>
-      {loading ? (
-        <div className="flex justify-center h-72 items-center">
-          <i className="fa-solid fa-spinner fa-spin text-3xl max-sm:text-2xl" />
-        </div>
-      ) : (
-        <div className="mt-10">
-          <div className="  flex flex-col gap-20 justify-center items-center flex-wrap">
-            <div className="  w-full px-10 flex flex-wrap justify-evenly items-center gap-4">
-              <Link className='text-black no-underline' to='../admin/management'>
-                <div className="bg-slate-300/30 shadow h-44 w-60 text-center flex flex-col justify-evenly items-center rounded-md cursor-pointer border-2 border-gray-600 transition-all ease-in-out hover:bg-slate-400/30  max-sm:h-32 max-sm:w-44">
-                  <span className='text-3xl max-sm:text-2xl'>Management Admin</span>
-                  <span className='text-3xl max-sm:text-2xl'>{countUsers.managementUsers}</span>
+    <div className="relative min-h-screen">
+      <AnimatedBackground intensity="medium" />
+      <div className="relative z-10 p-6">
+        {loading ? (
+          <div className="flex justify-center h-72 items-center">
+            <div className="flex flex-col items-center gap-4">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+              <p className="text-gray-600 font-medium">Loading dashboard...</p>
+            </div>
+          </div>
+        ) : (
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="mb-8">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl p-3 shadow-lg bounce-icon">
+                  <i className="fa-solid fa-user-shield text-white text-2xl"></i>
                 </div>
-              </Link>
-              <Link className='text-black no-underline' to='../admin/tpo'>
-                <div className="bg-slate-300/30 shadow h-44 w-60 text-center flex flex-col justify-evenly items-center rounded-md cursor-pointer border-2 border-gray-600 transition-all ease-in-out hover:bg-slate-400/30  max-sm:h-32 max-sm:w-44">
-                  <span className='text-3xl max-sm:text-2xl'>TPO Admin</span>
-                  <span className='text-3xl max-sm:text-2xl'>{countUsers.tpoUsers}</span>
+                <div>
+                  <h1 className="text-4xl font-bold mb-2 gradient-text">Super Admin Dashboard</h1>
+                  <p className="text-gray-600 font-medium">Manage all users and system settings</p>
                 </div>
-              </Link>
-              <Link className='text-black no-underline' to='../admin/student'>
-                <div className="bg-slate-300/30 shadow h-44 w-60 text-center flex flex-col justify-evenly items-center rounded-md cursor-pointer border-2 border-gray-600 transition-all ease-in-out hover:bg-slate-400/30  max-sm:h-32 max-sm:w-44">
-                  <span className='text-3xl max-sm:text-2xl'>Student User</span>
-                  <span className='text-3xl max-sm:text-2xl'>{countUsers.studentUsers}</span>
-                </div>
-              </Link>
-              <div className="bg-slate-300/30 shadow h-44 w-60 text-center flex flex-col justify-evenly items-center rounded-md cursor-pointer border-2 border-gray-600 transition-all ease-in-out hover:bg-slate-400/30  max-sm:h-32 max-sm:w-44">
-                <span className='text-3xl max-sm:text-2xl'>Superuser</span>
-                <span className='text-3xl max-sm:text-2xl'>{countUsers.superUsers}</span>
               </div>
             </div>
-            {
-              countUsers.studentApprovalPendingUsers !== 0 &&
-              (
-                <div className="bg-red-500 rounded">
-                  <Link className='text-black no-underline' to='../admin/approve-student'>
-                    <div className="bg-slate-300/30 shadow h-44 w-80 text-center flex flex-col justify-evenly items-center rounded-md cursor-pointer border-2 border-gray-600 transition-all ease-in-out hover:bg-slate-400/30 max-sm:h-32 max-sm:w-56">
-                      <span className='text-3xl max-sm:text-2xl'>
-                        Student Approval Pending
-                        <Badge bg="secondary" pill className='mx-2'>Action Needed</Badge>
-                      </span>
-                      <span className='text-3xl max-sm:text-2xl'>{countUsers.studentApprovalPendingUsers}</span>
-                    </div>
-                  </Link>
-                </div>
-              )
-            }
 
+            {/* User Statistics Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <Link className='no-underline' to='../admin/management'>
+                <GlassCard hoverable={true} glow={true} className="p-6 text-center cursor-pointer h-full">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl p-4 shadow-lg">
+                      <i className="fa-solid fa-users-cog text-white text-3xl"></i>
+                    </div>
+                    <div>
+                      <h3 className='text-xl font-bold text-gray-800 mb-2'>Management Admin</h3>
+                      <p className='text-4xl font-bold gradient-text'>{countUsers.managementUsers}</p>
+                    </div>
+                  </div>
+                </GlassCard>
+              </Link>
+              
+              <Link className='no-underline' to='../admin/tpo'>
+                <GlassCard hoverable={true} glow={true} className="p-6 text-center cursor-pointer h-full">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl p-4 shadow-lg">
+                      <i className="fa-solid fa-briefcase text-white text-3xl"></i>
+                    </div>
+                    <div>
+                      <h3 className='text-xl font-bold text-gray-800 mb-2'>TPO Admin</h3>
+                      <p className='text-4xl font-bold gradient-text'>{countUsers.tpoUsers}</p>
+                    </div>
+                  </div>
+                </GlassCard>
+              </Link>
+              
+              <Link className='no-underline' to='../admin/student'>
+                <GlassCard hoverable={true} glow={true} className="p-6 text-center cursor-pointer h-full">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl p-4 shadow-lg">
+                      <i className="fa-solid fa-user-graduate text-white text-3xl"></i>
+                    </div>
+                    <div>
+                      <h3 className='text-xl font-bold text-gray-800 mb-2'>Student User</h3>
+                      <p className='text-4xl font-bold gradient-text'>{countUsers.studentUsers}</p>
+                    </div>
+                  </div>
+                </GlassCard>
+              </Link>
+              
+              <GlassCard hoverable={true} glow={true} className="p-6 text-center h-full">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-xl p-4 shadow-lg">
+                    <i className="fa-solid fa-crown text-white text-3xl"></i>
+                  </div>
+                  <div>
+                    <h3 className='text-xl font-bold text-gray-800 mb-2'>Superuser</h3>
+                    <p className='text-4xl font-bold gradient-text'>{countUsers.superUsers}</p>
+                  </div>
+                </div>
+              </GlassCard>
+            </div>
+
+            {/* Student Approval Pending Alert */}
+            {countUsers.studentApprovalPendingUsers !== 0 && (
+              <div className="flex justify-center">
+                <Link className='no-underline w-full max-w-2xl' to='../admin/approve-student'>
+                  <GlassCard 
+                    hoverable={true} 
+                    glow={true} 
+                    className="p-6 text-center cursor-pointer border-2 border-red-300 bg-gradient-to-br from-red-50 to-pink-50"
+                  >
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="bg-gradient-to-br from-red-500 to-pink-600 rounded-xl p-4 shadow-lg animate-pulse">
+                        <i className="fa-solid fa-exclamation-triangle text-white text-3xl"></i>
+                      </div>
+                      <div>
+                        <h3 className='text-2xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-3'>
+                          Student Approval Pending
+                          <Badge bg="danger" pill className='text-sm'>Action Needed</Badge>
+                        </h3>
+                        <p className='text-4xl font-bold text-red-600'>{countUsers.studentApprovalPendingUsers}</p>
+                      </div>
+                    </div>
+                  </GlassCard>
+                </Link>
+              </div>
+            )}
           </div>
-        </div>
-      )
-      }
-    </>
+        )}
+      </div>
+    </div>
   )
 }
 

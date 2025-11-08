@@ -1,4 +1,5 @@
 const CompanySchema = require("../../models/company.model");
+const mongoose = require('mongoose');
 
 
 const AddCompany = async (req, res) => {
@@ -59,12 +60,21 @@ const UpdateCompany = async (req, res) => {
 const CompanyDetail = async (req, res) => {
   try {
     if (req.query.companyId) {
+      // Validate ObjectId format
+      if (!mongoose.Types.ObjectId.isValid(req.query.companyId)) {
+        return res.status(400).json({ msg: 'Invalid Company ID format' });
+      }
+      
       const company = await CompanySchema.findById(req.query.companyId);
+      if (!company) {
+        return res.status(404).json({ msg: 'Company not found' });
+      }
       return res.json({ company });
     }
+    return res.status(400).json({ msg: 'Company ID is required' });
   } catch (error) {
     console.log("company.all-company.controller.js = CompanyDetail => ", error);
-    return res.status(500).json({ msg: 'Server Error' });
+    return res.status(500).json({ msg: 'Server Error', error: error.message });
   }
 }
 

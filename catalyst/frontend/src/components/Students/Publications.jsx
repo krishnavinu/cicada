@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaPlus, FaTrash, FaEdit, FaFileAlt } from 'react-icons/fa';
 import Toast from '../Toast';
+import AnimatedBackground from '../UI/AnimatedBackground';
+import GlassCard from '../UI/GlassCard';
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 function Publications() {
@@ -129,44 +131,43 @@ function Publications() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-72">
-        <i className="fa-solid fa-spinner fa-spin text-3xl"></i>
+        <div className="flex flex-col items-center gap-4">
+          <i className="fa-solid fa-spinner fa-spin text-4xl text-blue-500 animate-pulse"></i>
+          <p className="text-gray-600 font-medium">Loading publications...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <>
-      <Toast show={showToast} onClose={() => setShowToast(false)} message={toastMessage} delay={3000} position="bottom-end" />
-      <div 
-        className="p-6 rounded-lg shadow-md"
-        style={{
-          backgroundColor: 'var(--color-surface)',
-          color: 'var(--color-text)'
-        }}
-      >
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-3">
-            <FaFileAlt className="text-2xl text-blue-500" />
-            <h2 className="text-2xl font-bold">Research Publications</h2>
+    <div className="relative min-h-screen">
+      {/* Animated Background */}
+      <AnimatedBackground variant="default" intensity="low" />
+      
+      {/* Main Content */}
+      <div className="relative z-10 p-4 sm:p-6">
+        <Toast show={showToast} onClose={() => setShowToast(false)} message={toastMessage} delay={3000} position="bottom-end" />
+        
+        <GlassCard hoverable={false} glow={true} className="p-6 sm:p-8">
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg bounce-icon">
+                <FaFileAlt className="text-white text-lg" />
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold gradient-text">Research Publications</h2>
+            </div>
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="group gradient-button px-4 py-2 flex items-center gap-2"
+            >
+              <FaPlus className="group-hover:rotate-90 transition-transform duration-300" />
+              <span>{showForm ? 'Cancel' : 'Add Publication'}</span>
+            </button>
           </div>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-300 flex items-center gap-2 shadow-md hover:shadow-lg"
-          >
-            <FaPlus /> {showForm ? 'Cancel' : 'Add Publication'}
-          </button>
-        </div>
 
-        {showForm && (
-          <form 
-            onSubmit={handleSubmit} 
-            className="mb-6 p-6 border-2 rounded-lg"
-            style={{
-              borderColor: 'var(--color-border)',
-              backgroundColor: 'var(--color-background)',
-              color: 'var(--color-text)'
-            }}
-          >
+          {showForm && (
+            <GlassCard hoverable={false} glow={false} className="mb-6 p-6 border-2 border-blue-200/50">
+            <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium mb-2">Title *</label>
@@ -175,19 +176,9 @@ function Publications() {
                   placeholder="Publication Title"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full p-3 border-2 rounded-lg transition-all"
+                  className="w-full p-3 border-2 border-blue-200/50 bg-white/80 backdrop-blur-sm rounded-xl transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-200/50 focus:bg-white focus:shadow-lg focus:shadow-blue-200/50 hover:border-blue-300/70"
                   style={{
-                    borderColor: 'var(--color-border)',
-                    backgroundColor: 'var(--color-background)',
                     color: 'var(--color-text)'
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-primary)';
-                    e.currentTarget.style.boxShadow = `0 0 0 2px rgba(var(--color-primary-rgb), 0.2)`;
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-border)';
-                    e.currentTarget.style.boxShadow = 'none';
                   }}
                   required
                 />
@@ -200,19 +191,9 @@ function Publications() {
                   placeholder="Journal or Conference Name"
                   value={formData.journal}
                   onChange={(e) => setFormData({ ...formData, journal: e.target.value })}
-                  className="w-full p-3 border-2 rounded-lg transition-all"
+                  className="w-full p-3 border-2 border-blue-200/50 bg-white/80 backdrop-blur-sm rounded-xl transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-200/50 focus:bg-white focus:shadow-lg focus:shadow-blue-200/50 hover:border-blue-300/70"
                   style={{
-                    borderColor: 'var(--color-border)',
-                    backgroundColor: 'var(--color-background)',
                     color: 'var(--color-text)'
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-primary)';
-                    e.currentTarget.style.boxShadow = `0 0 0 2px rgba(var(--color-primary-rgb), 0.2)`;
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-border)';
-                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 />
               </div>
@@ -224,19 +205,9 @@ function Publications() {
                   placeholder="Publication Year"
                   value={formData.year}
                   onChange={(e) => setFormData({ ...formData, year: parseInt(e.target.value) || new Date().getFullYear() })}
-                  className="w-full p-3 border-2 rounded-lg transition-all"
+                  className="w-full p-3 border-2 border-blue-200/50 bg-white/80 backdrop-blur-sm rounded-xl transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-200/50 focus:bg-white focus:shadow-lg focus:shadow-blue-200/50 hover:border-blue-300/70"
                   style={{
-                    borderColor: 'var(--color-border)',
-                    backgroundColor: 'var(--color-background)',
                     color: 'var(--color-text)'
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-primary)';
-                    e.currentTarget.style.boxShadow = `0 0 0 2px rgba(var(--color-primary-rgb), 0.2)`;
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-border)';
-                    e.currentTarget.style.boxShadow = 'none';
                   }}
                   min="1900"
                   max={new Date().getFullYear() + 1}
@@ -250,19 +221,9 @@ function Publications() {
                   placeholder="Author 1, Author 2, Author 3"
                   value={formData.authors}
                   onChange={(e) => setFormData({ ...formData, authors: e.target.value })}
-                  className="w-full p-3 border-2 rounded-lg transition-all"
+                  className="w-full p-3 border-2 border-blue-200/50 bg-white/80 backdrop-blur-sm rounded-xl transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-200/50 focus:bg-white focus:shadow-lg focus:shadow-blue-200/50 hover:border-blue-300/70"
                   style={{
-                    borderColor: 'var(--color-border)',
-                    backgroundColor: 'var(--color-background)',
                     color: 'var(--color-text)'
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-primary)';
-                    e.currentTarget.style.boxShadow = `0 0 0 2px rgba(var(--color-primary-rgb), 0.2)`;
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-border)';
-                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 />
               </div>
@@ -274,19 +235,9 @@ function Publications() {
                   placeholder="DOI (if available)"
                   value={formData.doi}
                   onChange={(e) => setFormData({ ...formData, doi: e.target.value })}
-                  className="w-full p-3 border-2 rounded-lg transition-all"
+                  className="w-full p-3 border-2 border-blue-200/50 bg-white/80 backdrop-blur-sm rounded-xl transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-200/50 focus:bg-white focus:shadow-lg focus:shadow-blue-200/50 hover:border-blue-300/70"
                   style={{
-                    borderColor: 'var(--color-border)',
-                    backgroundColor: 'var(--color-background)',
                     color: 'var(--color-text)'
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-primary)';
-                    e.currentTarget.style.boxShadow = `0 0 0 2px rgba(var(--color-primary-rgb), 0.2)`;
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-border)';
-                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 />
               </div>
@@ -298,19 +249,9 @@ function Publications() {
                   placeholder="Publication URL"
                   value={formData.link}
                   onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-                  className="w-full p-3 border-2 rounded-lg transition-all"
+                  className="w-full p-3 border-2 border-blue-200/50 bg-white/80 backdrop-blur-sm rounded-xl transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-200/50 focus:bg-white focus:shadow-lg focus:shadow-blue-200/50 hover:border-blue-300/70"
                   style={{
-                    borderColor: 'var(--color-border)',
-                    backgroundColor: 'var(--color-background)',
                     color: 'var(--color-text)'
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-primary)';
-                    e.currentTarget.style.boxShadow = `0 0 0 2px rgba(var(--color-primary-rgb), 0.2)`;
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-border)';
-                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 />
               </div>
@@ -324,49 +265,65 @@ function Publications() {
                   max="100"
                   value={formData.weightage}
                   onChange={(e) => setFormData({ ...formData, weightage: parseInt(e.target.value) || 0 })}
-                  className="w-full p-3 border-2 rounded-lg transition-all"
+                  className="w-full p-3 border-2 border-blue-200/50 bg-white/80 backdrop-blur-sm rounded-xl transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-200/50 focus:bg-white focus:shadow-lg focus:shadow-blue-200/50 hover:border-blue-300/70"
                   style={{
-                    borderColor: 'var(--color-border)',
-                    backgroundColor: 'var(--color-background)',
                     color: 'var(--color-text)'
                   }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-primary)';
-                    e.currentTarget.style.boxShadow = `0 0 0 2px rgba(var(--color-primary-rgb), 0.2)`;
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-border)';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
                 />
-                <p className="text-xs text-gray-500 mt-1">This adds weightage to your profile (0-100)</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--color-text-secondary)' }}>This adds weightage to your profile (0-100)</p>
               </div>
             </div>
             
-            <div className="flex gap-3 mt-4">
-              <button type="submit" className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all duration-300 flex items-center gap-2">
-                <FaPlus /> {editingIndex >= 0 ? 'Update' : 'Add'} Publication
+            <div className="flex gap-3 mt-6">
+              <button type="submit" className="group gradient-button px-6 py-2 flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                <FaPlus className="group-hover:rotate-90 transition-transform duration-300" />
+                <span>{editingIndex >= 0 ? 'Update' : 'Add'} Publication</span>
               </button>
-              <button type="button" onClick={resetForm} className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all duration-300">
+              <button 
+                type="button" 
+                onClick={resetForm} 
+                className="px-6 py-2 rounded-lg transition-all duration-300"
+                style={{
+                  backgroundColor: 'var(--color-surface)',
+                  color: 'var(--color-text)',
+                  border: '2px solid var(--color-border)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-error)';
+                  e.currentTarget.style.color = '#ffffff';
+                  e.currentTarget.style.borderColor = 'var(--color-error)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-surface)';
+                  e.currentTarget.style.color = 'var(--color-text)';
+                  e.currentTarget.style.borderColor = 'var(--color-border)';
+                }}
+              >
                 Cancel
               </button>
             </div>
-          </form>
-        )}
+            </form>
+            </GlassCard>
+          )}
 
-        <div className="space-y-4">
+          <div className="space-y-4 mt-6">
           {publications.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">
-              <FaFileAlt className="text-5xl mx-auto mb-4 opacity-50" />
-              <p className="text-lg">No publications added yet.</p>
-              <p className="text-sm">Click "Add Publication" to get started.</p>
+            <div className="text-center py-12" style={{ color: 'var(--color-text-secondary)' }}>
+              <FaFileAlt className="text-5xl mx-auto mb-4 opacity-50" style={{ color: 'var(--color-text-secondary)' }} />
+              <p className="text-lg" style={{ color: 'var(--color-text-secondary)' }}>No publications added yet.</p>
+              <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Click "Add Publication" to get started.</p>
             </div>
           ) : (
             publications.map((pub, index) => (
-              <div key={index} className="p-5 border-2 border-gray-200 rounded-lg hover:border-blue-300 transition-all duration-300 hover:shadow-md">
+              <GlassCard
+                key={index}
+                hoverable={true}
+                glow={false}
+                className="p-5 floating-card"
+              >
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1">
-                    <h3 className="font-bold text-lg text-gray-800 mb-2">{pub.title}</h3>
+                    <h3 className="font-bold text-lg mb-2" style={{ color: 'var(--color-text)' }}>{pub.title}</h3>
                     {pub.journal && (
                       <p className="text-gray-600 mb-1">
                         <i className="fa-solid fa-book text-blue-500 mr-2"></i>
@@ -419,12 +376,13 @@ function Publications() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </GlassCard>
             ))
           )}
-        </div>
+          </div>
+        </GlassCard>
       </div>
-    </>
+    </div>
   );
 }
 

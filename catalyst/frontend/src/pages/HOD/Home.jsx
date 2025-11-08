@@ -3,6 +3,8 @@ import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import AnimatedBackground from '../../components/UI/AnimatedBackground';
+import GlassCard from '../../components/UI/GlassCard';
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 function HODHome() {
@@ -32,14 +34,27 @@ function HODHome() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-96">
-        <i className="fa-solid fa-spinner fa-spin text-4xl"></i>
+      <div className="relative min-h-screen flex justify-center items-center">
+        <AnimatedBackground intensity="low" />
+        <div className="relative z-10 flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+          <p className="text-gray-600 font-medium">Loading dashboard...</p>
+        </div>
       </div>
     );
   }
 
   if (!stats) {
-    return <div>Error loading dashboard</div>;
+    return (
+      <div className="relative min-h-screen flex justify-center items-center">
+        <AnimatedBackground intensity="low" />
+        <div className="relative z-10">
+          <GlassCard className="p-8 text-center">
+            <p className="text-red-500 text-lg">Error loading dashboard</p>
+          </GlassCard>
+        </div>
+      </div>
+    );
   }
 
   const yearWiseData = Object.entries(stats.statistics.yearWise || {}).map(([year, data]) => ({
@@ -50,210 +65,136 @@ function HODHome() {
   }));
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 
-          className="text-3xl font-bold mb-2"
-          style={{ color: 'var(--color-text)' }}
-        >
-          {stats.department} Department Dashboard
-        </h1>
-        <p style={{ color: 'var(--color-text-secondary)' }}>Head of Department Portal</p>
-      </div>
+    <div className="relative min-h-screen p-6">
+      <AnimatedBackground intensity="low" />
+      <div className="relative z-10">
+        <div className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl p-3 shadow-lg bounce-icon">
+              <i className="fa-solid fa-chart-line text-white text-2xl"></i>
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold mb-2 gradient-text">
+                {stats.department} Department Dashboard
+              </h1>
+              <p className="text-gray-600 font-medium">Head of Department Portal</p>
+            </div>
+          </div>
+        </div>
 
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <Card 
-          className="backdrop-blur-xl border-2 shadow-lg"
-          style={{
-            background: 'rgba(36, 30, 42, 0.7)',
-            borderColor: 'rgba(139, 92, 246, 0.3)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-          }}
-        >
-          <Card.Body>
-            <h6 
-              className="mb-2"
-              style={{ color: 'var(--color-text-secondary)' }}
-            >
-              Total Students
-            </h6>
-            <h2 
-              className="text-3xl font-bold"
-              style={{ color: 'var(--color-text)' }}
-            >
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <GlassCard hoverable={true} glow={true} className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-3">
+                <i className="fa-solid fa-users text-white text-xl"></i>
+              </div>
+            </div>
+            <h6 className="text-sm font-medium text-gray-600 mb-2">Total Students</h6>
+            <h2 className="text-4xl font-bold gradient-text">
               {stats.statistics.totalStudents}
             </h2>
-          </Card.Body>
-        </Card>
-        <Card 
-          className="backdrop-blur-xl border-2 shadow-lg"
-          style={{
-            background: 'rgba(36, 30, 42, 0.7)',
-            borderColor: 'rgba(139, 92, 246, 0.3)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-          }}
-        >
-          <Card.Body>
-            <h6 
-              className="mb-2"
-              style={{ color: 'var(--color-text-secondary)' }}
-            >
-              Approved Students
-            </h6>
-            <h2 
-              className="text-3xl font-bold"
-              style={{ color: 'var(--color-success)' }}
-            >
+          </GlassCard>
+          
+          <GlassCard hoverable={true} glow={true} className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg p-3">
+                <i className="fa-solid fa-check-circle text-white text-xl"></i>
+              </div>
+            </div>
+            <h6 className="text-sm font-medium text-gray-600 mb-2">Approved Students</h6>
+            <h2 className="text-4xl font-bold" style={{ color: 'var(--color-success)' }}>
               {stats.statistics.approvedStudents}
             </h2>
-          </Card.Body>
-        </Card>
-        <Card 
-          className="backdrop-blur-xl border-2 shadow-lg"
-          style={{
-            background: 'rgba(36, 30, 42, 0.7)',
-            borderColor: 'rgba(139, 92, 246, 0.3)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-          }}
-        >
-          <Card.Body>
-            <h6 
-              className="mb-2"
-              style={{ color: 'var(--color-text-secondary)' }}
-            >
-              Placed Students
-            </h6>
-            <h2 
-              className="text-3xl font-bold"
-              style={{ color: 'var(--color-primary)' }}
-            >
+          </GlassCard>
+          
+          <GlassCard hoverable={true} glow={true} className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg p-3">
+                <i className="fa-solid fa-briefcase text-white text-xl"></i>
+              </div>
+            </div>
+            <h6 className="text-sm font-medium text-gray-600 mb-2">Placed Students</h6>
+            <h2 className="text-4xl font-bold" style={{ color: 'var(--color-primary)' }}>
               {stats.statistics.placement.placed}
             </h2>
-          </Card.Body>
-        </Card>
-        <Card 
-          className="backdrop-blur-xl border-2 shadow-lg"
-          style={{
-            background: 'rgba(36, 30, 42, 0.7)',
-            borderColor: 'rgba(139, 92, 246, 0.3)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-          }}
-        >
-          <Card.Body>
-            <h6 
-              className="mb-2"
-              style={{ color: 'var(--color-text-secondary)' }}
-            >
-              Average Package
-            </h6>
-            <h2 
-              className="text-3xl font-bold"
-              style={{ color: 'var(--color-info)' }}
-            >
+          </GlassCard>
+          
+          <GlassCard hoverable={true} glow={true} className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-lg p-3">
+                <i className="fa-solid fa-rupee-sign text-white text-xl"></i>
+              </div>
+            </div>
+            <h6 className="text-sm font-medium text-gray-600 mb-2">Average Package</h6>
+            <h2 className="text-4xl font-bold" style={{ color: 'var(--color-info)' }}>
               ₹{stats.statistics.averagePackage} LPA
             </h2>
-          </Card.Body>
-        </Card>
-      </div>
+          </GlassCard>
+        </div>
 
-      {/* Placement Statistics */}
-      <Card 
-        className="mb-6 backdrop-blur-xl border-2 shadow-lg"
-        style={{
-          background: 'rgba(36, 30, 42, 0.7)',
-          borderColor: 'rgba(139, 92, 246, 0.3)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-        }}
-      >
-        <Card.Header
-          style={{
-            background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
-            color: '#ffffff',
-            border: 'none'
-          }}
-        >
-          <h3>Placement Statistics</h3>
-        </Card.Header>
-        <Card.Body style={{ backgroundColor: 'transparent' }}>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center">
+        {/* Placement Statistics */}
+        <GlassCard hoverable={true} glow={true} className="mb-8 p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg">
+              <i className="fa-solid fa-chart-pie text-white text-lg"></i>
+            </div>
+            <h3 className="text-2xl font-bold gradient-text">Placement Statistics</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="text-center p-4 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:shadow-lg transition-all duration-300">
               <Badge 
-                className="text-lg px-4 py-2"
+                className="text-lg px-6 py-3 w-full"
                 style={{
                   background: 'linear-gradient(135deg, var(--color-success) 0%, #059669 100%)',
-                  color: '#ffffff'
+                  color: '#ffffff',
+                  border: 'none'
                 }}
               >
                 {stats.statistics.placement.placed} Placed
               </Badge>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-xl bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-200 hover:shadow-lg transition-all duration-300">
               <Badge 
-                className="text-lg px-4 py-2"
+                className="text-lg px-6 py-3 w-full"
                 style={{
                   background: 'linear-gradient(135deg, var(--color-warning) 0%, #d97706 100%)',
-                  color: '#ffffff'
+                  color: '#ffffff',
+                  border: 'none'
                 }}
               >
                 {stats.statistics.placement.inProcess} In Process
               </Badge>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-xl bg-gradient-to-br from-red-50 to-pink-50 border-2 border-red-200 hover:shadow-lg transition-all duration-300">
               <Badge 
-                className="text-lg px-4 py-2"
+                className="text-lg px-6 py-3 w-full"
                 style={{
                   background: 'linear-gradient(135deg, var(--color-error) 0%, #dc2626 100%)',
-                  color: '#ffffff'
+                  color: '#ffffff',
+                  border: 'none'
                 }}
               >
                 {stats.statistics.placement.unplaced} Unplaced
               </Badge>
             </div>
           </div>
-          <div className="mt-4">
-            <p 
-              className="text-center"
-              style={{ color: 'var(--color-text)' }}
-            >
-              <strong>Placement Rate:</strong> {stats.statistics.placement.placementRate}%
+          <div className="text-center p-4 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200">
+            <p className="text-lg font-semibold gradient-text">
+              Placement Rate: {stats.statistics.placement.placementRate}%
             </p>
           </div>
-        </Card.Body>
-      </Card>
+        </GlassCard>
 
-      {/* Year-wise Chart */}
-      {yearWiseData.length > 0 && (
-        <Card 
-          className="mb-6 backdrop-blur-xl border-2 shadow-lg"
-          style={{
-            background: 'rgba(36, 30, 42, 0.7)',
-            borderColor: 'rgba(139, 92, 246, 0.3)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-          }}
-        >
-          <Card.Header
-            style={{
-              background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
-              color: '#ffffff',
-              border: 'none'
-            }}
-          >
-            <h3>Year-wise Statistics</h3>
-          </Card.Header>
-          <Card.Body style={{ backgroundColor: 'transparent' }}>
+        {/* Year-wise Chart */}
+        {yearWiseData.length > 0 && (
+          <GlassCard hoverable={true} glow={true} className="mb-8 p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg">
+                <i className="fa-solid fa-chart-bar text-white text-lg"></i>
+              </div>
+              <h3 className="text-2xl font-bold gradient-text">Year-wise Statistics</h3>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={yearWiseData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
@@ -263,72 +204,51 @@ function HODHome() {
                   contentStyle={{
                     backgroundColor: 'var(--color-surface)',
                     border: '1px solid var(--color-border)',
-                    color: 'var(--color-text)'
+                    color: 'var(--color-text)',
+                    borderRadius: '12px'
                   }}
                 />
                 <Legend wrapperStyle={{ color: 'var(--color-text)' }} />
-                <Bar dataKey="total" fill="var(--color-primary)" name="Total" />
-                <Bar dataKey="approved" fill="var(--color-success)" name="Approved" />
-                <Bar dataKey="placed" fill="var(--color-warning)" name="Placed" />
+                <Bar dataKey="total" fill="var(--color-primary)" name="Total" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="approved" fill="var(--color-success)" name="Approved" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="placed" fill="var(--color-warning)" name="Placed" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
-          </Card.Body>
-        </Card>
-      )}
+          </GlassCard>
+        )}
 
-      {/* Top Companies */}
-      {stats.statistics.topCompanies && stats.statistics.topCompanies.length > 0 && (
-        <Card 
-          className="backdrop-blur-xl border-2 shadow-lg"
-          style={{
-            background: 'rgba(36, 30, 42, 0.7)',
-            borderColor: 'rgba(139, 92, 246, 0.3)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-          }}
-        >
-          <Card.Header
-            style={{
-              background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
-              color: '#ffffff',
-              border: 'none'
-            }}
-          >
-            <h3>Top Recruiting Companies</h3>
-          </Card.Header>
-          <Card.Body style={{ backgroundColor: 'transparent' }}>
-            <ul className="list-unstyled">
+        {/* Top Companies */}
+        {stats.statistics.topCompanies && stats.statistics.topCompanies.length > 0 && (
+          <GlassCard hoverable={true} glow={true} className="p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg">
+                <i className="fa-solid fa-building text-white text-lg"></i>
+              </div>
+              <h3 className="text-2xl font-bold gradient-text">Top Recruiting Companies</h3>
+            </div>
+            <div className="space-y-3">
               {stats.statistics.topCompanies.map((company, i) => (
-                <li 
-                  key={i} 
-                  className="mb-2 flex justify-between items-center p-2 rounded transition-all duration-300"
-                  style={{
-                    backgroundColor: i % 2 === 0 ? 'rgba(139, 92, 246, 0.1)' : 'rgba(139, 92, 246, 0.05)',
-                    border: '1px solid var(--color-border)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(139, 92, 246, 0.2)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = i % 2 === 0 ? 'rgba(139, 92, 246, 0.1)' : 'rgba(139, 92, 246, 0.05)';
-                  }}
+                <div
+                  key={i}
+                  className="flex justify-between items-center p-4 rounded-xl border-2 border-blue-200/50 bg-white/50 backdrop-blur-sm hover:bg-white/70 hover:border-blue-300/70 hover:shadow-md transition-all duration-300 cursor-pointer"
                 >
-                  <span style={{ color: 'var(--color-text)' }}>{company.name}</span>
+                  <span className="text-gray-800 font-medium">{company.name}</span>
                   <Badge 
+                    className="px-4 py-2 text-sm"
                     style={{
                       background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
-                      color: '#ffffff'
+                      color: '#ffffff',
+                      border: 'none'
                     }}
                   >
                     {company.count} students
                   </Badge>
-                </li>
+                </div>
               ))}
-            </ul>
-          </Card.Body>
-        </Card>
-      )}
+            </div>
+          </GlassCard>
+        )}
+      </div>
     </div>
   );
 }

@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Badge from 'react-bootstrap/Badge';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { motion, AnimatePresence } from 'framer-motion';
+import Card from './UI/Card';
+import Skeleton, { SkeletonCard } from './UI/Skeleton';
+import EmptyState from './UI/EmptyState';
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 function NoticeBox() {
@@ -60,196 +64,151 @@ function NoticeBox() {
     }
   };
 
-  return (
-    <div 
-      className="my-2 mx-2 w-full backdrop-blur-xl border-2 rounded-2xl py-4 px-4 shadow-xl hover:shadow-2xl transition-all duration-500 card-hover animate-fadeInUp"
-      style={{
-        background: 'rgba(36, 30, 42, 0.7)',
-        borderColor: 'rgba(139, 92, 246, 0.3)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-      }}
-    >
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-3">
-          <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"
-            style={{
-              background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)'
-            }}
-          >
-            <i className="fa-solid fa-bullhorn text-white"></i>
-          </div>
-          <h3 
-            className="font-bold text-xl"
-            style={{ color: 'var(--color-text)' }}
-          >
-            Notices
-          </h3>
-        </div>
-        <span className=''>
-          {
-            currentUser?.role === 'student' && (
-              <Link 
-                to='/student/all-notice' 
-                className='no-underline font-semibold transition-all duration-300 hover:scale-105 inline-flex items-center gap-1 group'
-                style={{ color: 'var(--color-primary)' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--color-secondary)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--color-primary)';
-                }}
-              >
-                View All
-                <i className="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform duration-300"></i>
-              </Link>
-            )
-          }
-          {
-            currentUser?.role === 'tpo_admin' && (
-              <Link 
-                to='/tpo/all-notice' 
-                className='no-underline font-semibold transition-all duration-300 hover:scale-105 inline-flex items-center gap-1 group'
-                style={{ color: 'var(--color-primary)' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--color-secondary)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--color-primary)';
-                }}
-              >
-                View All
-                <i className="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform duration-300"></i>
-              </Link>
-            )
-          }
-          {
-            currentUser?.role === 'management_admin' && (
-              <Link 
-                to='/management/all-notice' 
-                className='no-underline font-semibold transition-all duration-300 hover:scale-105 inline-flex items-center gap-1 group'
-                style={{ color: 'var(--color-primary)' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--color-secondary)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--color-primary)';
-                }}
-              >
-                View All
-                <i className="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform duration-300"></i>
-              </Link>
-            )
-          }
-        </span>
-      </div>
+  const getViewAllLink = () => {
+    if (currentUser?.role === 'student') return '/student/all-notice';
+    if (currentUser?.role === 'tpo_admin') return '/tpo/all-notice';
+    if (currentUser?.role === 'management_admin') return '/management/all-notice';
+    return '#';
+  };
 
-      {loading ? (
-        <div className="flex justify-center items-center h-72">
-          <div className="relative">
-            <i 
-              className="fa-solid fa-spinner fa-spin text-4xl"
+  return (
+    <Card
+      className="my-2 mx-2 w-full"
+      icon={<i className="fa-solid fa-bullhorn text-white"></i>}
+      title="Notices"
+      action={
+        getViewAllLink() !== '#' && (
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              to={getViewAllLink()}
+              className="no-underline font-semibold inline-flex items-center gap-1 group"
               style={{ color: 'var(--color-primary)' }}
-            ></i>
-            <div 
-              className="absolute inset-0 rounded-full blur-xl opacity-20 animate-pulse"
-              style={{ backgroundColor: 'var(--color-primary)' }}
-            ></div>
-          </div>
-        </div>
-      ) : (
-        <div 
-          className="relative h-72 overflow-y-auto rounded-xl"
-          style={{
-            background: 'rgba(26, 21, 31, 0.4)',
-            border: '1px solid rgba(139, 92, 246, 0.2)'
-          }}
-        >
-          <div className="w-full flex flex-col gap-2 p-2">
+            >
+              View All
+              <motion.i
+                className="fa-solid fa-arrow-right text-xs"
+                animate={{ x: [0, 4, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
+              />
+            </Link>
+          </motion.div>
+        )
+      }
+    >
+      <AnimatePresence mode="wait">
+        {loading ? (
+          <motion.div
+            key="loading"
+            className="flex flex-col gap-3 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <Skeleton variant="text" width="100%" height={60} count={3} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="content"
+            className="relative h-72 overflow-y-auto rounded-xl p-2 custom-scrollbar"
+            style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
             {noticesData?.length > 0 ? (
-              noticesData.map((notice, index) => (
-                <div 
-                  key={index} 
-                  className="py-3 px-3 rounded-lg transition-all duration-300 hover:translate-x-2 group cursor-pointer border-l-4 border-transparent"
-                  style={{
-                    borderLeftColor: 'transparent',
-                    backgroundColor: 'transparent'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(139, 92, 246, 0.1)';
-                    e.currentTarget.style.borderLeftColor = 'var(--color-primary)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.borderLeftColor = 'transparent';
-                  }}
-                >
-                  <Link
-                    className="no-underline font-medium group-hover:underline transition-all duration-300 flex items-center gap-2"
-                    style={{ color: 'var(--color-text)' }}
-                    to={
+              <div className="w-full flex flex-col gap-2">
+                <AnimatePresence>
+                  {noticesData.map((notice, index) => {
+                    const isNew = (new Date() - new Date(notice?.createdAt)) / (1000 * 60 * 60 * 24) <= 2;
+                    const noticeLink =
                       currentUser?.role === 'student'
                         ? `/student/notice/${notice?._id}`
                         : currentUser?.role === 'tpo_admin'
                           ? `/tpo/notice/${notice?._id}`
                           : currentUser.role === 'management_admin'
                             ? `/management/notice/${notice?._id}`
-                            : ''
-                    }
-                    target="_blank"
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = 'var(--color-primary)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = 'var(--color-text)';
-                    }}
-                  >
-                    <i 
-                      className="fa-solid fa-file-alt text-sm group-hover:scale-110 transition-transform duration-300"
-                      style={{ color: 'var(--color-primary)' }}
-                    ></i>
-                    {notice?.title}
-                    {(new Date() - new Date(notice?.createdAt)) / (1000 * 60 * 60 * 24) <= 2 && (
-                      <Badge 
-                        className="border-0 animate-pulse"
+                            : '';
+
+                    return (
+                      <motion.div
+                        key={notice._id || index}
+                        className="py-3 px-3 rounded-lg cursor-pointer border-l-4"
                         style={{
-                          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                          color: '#ffffff'
+                          borderLeftColor: 'transparent',
+                          backgroundColor: 'transparent',
+                        }}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        transition={{ delay: index * 0.05 }}
+                        whileHover={{
+                          x: 8,
+                          backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                          borderLeftColor: 'var(--color-primary)',
                         }}
                       >
-                        New
-                      </Badge>
-                    )}
-                  </Link>
-                  <div className="flex items-center gap-2 mt-1">
-                    <i 
-                      className="fa-solid fa-clock text-xs"
-                      style={{ color: 'var(--color-text-secondary)' }}
-                    ></i>
-                    <span 
-                      className="text-xs"
-                      style={{ color: 'var(--color-text-secondary)' }}
-                    >
-                      {new Date(notice?.createdAt).toLocaleDateString('en-IN')} {new Date(notice?.createdAt).toLocaleTimeString('en-IN')}
-                    </span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div 
-                className="flex flex-col items-center justify-center h-full"
-                style={{ color: 'var(--color-text-secondary)' }}
-              >
-                <i className="fa-solid fa-inbox text-4xl mb-2"></i>
-                <p>No notices found!</p>
+                        <Link
+                          className="no-underline font-medium flex items-center gap-2"
+                          style={{ color: 'var(--color-text)' }}
+                          to={noticeLink}
+                          target="_blank"
+                        >
+                          <motion.i
+                            className="fa-solid fa-file-alt text-sm"
+                            style={{ color: 'var(--color-primary)' }}
+                            whileHover={{ scale: 1.2, rotate: 5 }}
+                          />
+                          <span>{notice?.title}</span>
+                          {isNew && (
+                            <motion.span
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ type: 'spring', stiffness: 500 }}
+                            >
+                              <Badge
+                                className="border-0"
+                                style={{
+                                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                                  color: '#ffffff',
+                                }}
+                              >
+                                New
+                              </Badge>
+                            </motion.span>
+                          )}
+                        </Link>
+                        <div className="flex items-center gap-2 mt-1">
+                          <i
+                            className="fa-solid fa-clock text-xs"
+                            style={{ color: 'var(--color-text-secondary)' }}
+                          />
+                          <span
+                            className="text-xs"
+                            style={{ color: 'var(--color-text-secondary)' }}
+                          >
+                            {new Date(notice?.createdAt).toLocaleDateString('en-IN')}{' '}
+                            {new Date(notice?.createdAt).toLocaleTimeString('en-IN')}
+                          </span>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
               </div>
+            ) : (
+              <EmptyState
+                icon="fa-inbox"
+                title="No notices found"
+                description="You don't have any notices at the moment. Check back later for updates."
+              />
             )}
-          </div>
-        </div>
-      )}
-    </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Card>
   );
 }
 

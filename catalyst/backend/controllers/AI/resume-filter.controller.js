@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const groq = require('../../config/Groq');
 const User = require('../../models/user.model');
 const Job = require('../../models/job.model');
@@ -29,16 +30,43 @@ const filterResumes = async (req, res) => {
       return res.status(400).json({ msg: 'Job ID is required' });
     }
     
+    // Convert jobId to ObjectId for proper querying
+    let jobObjectId;
+    try {
+      if (mongoose.Types.ObjectId.isValid(jobId)) {
+        jobObjectId = new mongoose.Types.ObjectId(jobId);
+      } else {
+        return res.status(400).json({ msg: 'Invalid Job ID format' });
+      }
+    } catch (error) {
+      return res.status(400).json({ msg: 'Invalid Job ID format' });
+    }
+    
     // Get job requirements
-    const job = await Job.findById(jobId).populate('company');
+    const job = await Job.findById(jobObjectId).populate('company');
     if (!job) {
       return res.status(404).json({ msg: 'Job not found' });
     }
     
-    // Get all applicants
-    const applicants = await User.find({
-      'studentProfile.appliedJobs.jobId': jobId
-    });
+    // Get applicants - try both methods for reliability
+    let applicants = [];
+    
+    // Method 1: Get from Job.applicants array (more reliable)
+    if (job.applicants && job.applicants.length > 0) {
+      const applicantIds = job.applicants.map(app => app.studentId).filter(id => id);
+      applicants = await User.find({
+        _id: { $in: applicantIds },
+        role: 'student'
+      });
+    }
+    
+    // Method 2: Fallback - Get from User.appliedJobs
+    if (applicants.length === 0) {
+      applicants = await User.find({
+        'studentProfile.appliedJobs.jobId': jobObjectId,
+        role: 'student'
+      });
+    }
     
     if (applicants.length === 0) {
       return res.json({
@@ -46,7 +74,8 @@ const filterResumes = async (req, res) => {
         filteredResults: [],
         shortlisted: 0,
         maybe: 0,
-        rejected: 0
+        rejected: 0,
+        msg: 'No applicants found for this job'
       });
     }
     
@@ -55,13 +84,14 @@ const filterResumes = async (req, res) => {
     
     for (const applicant of applicants) {
       const applicantData = {
-        name: `${applicant.first_name || ''} ${applicant.last_name || ''}`.trim(),
+        name: `${applicant.first_name || ''} ${applicant.last_name || ''}`.trim() || 'Unknown',
         department: applicant.studentProfile?.department || 'Unknown',
         year: applicant.studentProfile?.year || 0,
         cgpa: calculateCGPA(applicant.studentProfile?.SGPA),
         backlogs: applicant.studentProfile?.liveKT || 0,
         hasResume: !!applicant.studentProfile?.resume,
-        internships: applicant.studentProfile?.internships?.length || 0
+        internships: applicant.studentProfile?.internships?.length || 0,
+        attendance: applicant.studentProfile?.attendance?.overallPercentage || 0
       };
       
       const prompt = `Evaluate if this candidate matches the job requirements:
@@ -74,11 +104,13 @@ const filterResumes = async (req, res) => {
       - Backlogs: ${applicantData.backlogs}
       - Has Resume: ${applicantData.hasResume}
       - Internships: ${applicantData.internships}
+      - Attendance: ${applicantData.attendance}%
       
       Job Requirements:
       - Title: ${job.jobTitle}
       - Description: ${job.jobDescription?.substring(0, 500) || 'N/A'}
       - Eligibility: ${job.eligibility?.substring(0, 500) || 'N/A'}
+      - Company: ${job.company?.companyName || 'N/A'}
       
       Return JSON:
       {
@@ -112,7 +144,32 @@ const filterResumes = async (req, res) => {
           response_format: { type: "json_object" }
         });
         
-        const evaluation = JSON.parse(completion.choices[0].message.content);
+        const aiResponse = completion.choices[0].message.content;
+        let evaluation;
+        
+        try {
+          // Try to parse JSON directly
+          evaluation = JSON.parse(aiResponse);
+        } catch (parseError) {
+          // If direct parse fails, try to extract JSON from markdown or other formatting
+          const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            evaluation = JSON.parse(jsonMatch[0]);
+          } else {
+            throw new Error('Failed to parse AI response as JSON');
+          }
+        }
+        
+        // Validate evaluation object
+        if (!evaluation.matchScore && evaluation.matchScore !== 0) {
+          evaluation.matchScore = 50;
+        }
+        if (!evaluation.recommendation) {
+          evaluation.recommendation = 'maybe';
+        }
+        if (!evaluation.reason) {
+          evaluation.reason = 'No reason provided';
+        }
         
         filterResults.push({
           applicantId: applicant._id,
@@ -121,14 +178,17 @@ const filterResumes = async (req, res) => {
           department: applicantData.department,
           year: applicantData.year,
           cgpa: applicantData.cgpa,
-          matchScore: evaluation.matchScore || 0,
-          recommendation: evaluation.recommendation || 'maybe',
+          matchScore: Math.max(0, Math.min(100, evaluation.matchScore || 0)),
+          recommendation: ['shortlist', 'maybe', 'reject'].includes(evaluation.recommendation?.toLowerCase()) 
+            ? evaluation.recommendation.toLowerCase() 
+            : 'maybe',
           reason: evaluation.reason || 'No reason provided',
-          matches: evaluation.matches || [],
-          gaps: evaluation.gaps || [],
+          matches: Array.isArray(evaluation.matches) ? evaluation.matches : [],
+          gaps: Array.isArray(evaluation.gaps) ? evaluation.gaps : [],
           resume: applicant.studentProfile?.resume || null
         });
       } catch (aiError) {
+        console.error(`AI evaluation error for applicant ${applicant._id}:`, aiError.message);
         // Fallback if AI fails
         filterResults.push({
           applicantId: applicant._id,
@@ -147,7 +207,7 @@ const filterResumes = async (req, res) => {
       }
     }
     
-    // Sort by match score
+    // Sort by match score (highest first)
     filterResults.sort((a, b) => b.matchScore - a.matchScore);
     
     res.json({ 
@@ -159,7 +219,11 @@ const filterResumes = async (req, res) => {
     });
   } catch (error) {
     console.error('Error filtering resumes:', error);
-    res.status(500).json({ msg: 'Error filtering resumes', error: error.message });
+    res.status(500).json({ 
+      msg: 'Error filtering resumes', 
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
 

@@ -4,6 +4,8 @@ import { GrFormAdd } from 'react-icons/gr';
 import axios from 'axios';
 import Toast from '../Toast';
 import ModalBox from '../Modal';
+import AnimatedBackground from '../UI/AnimatedBackground';
+import GlassCard from '../UI/GlassCard';
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 import { useLocation } from 'react-router-dom';
 
@@ -139,78 +141,127 @@ function AddNewUser() {
         position="top-center"
       />
 
-      <div className="flex justify-center items-center h-full max-md:h-fit text-base max-sm:text-sm">
-        <div className="my-4 backdrop-blur-md bg-white/30 border border-white/20 rounded-lg p-8 shadow shadow-red-400 w-fit">
-          <Form onSubmit={handleModalSubmit} className='flex flex-col justify-center items-center'>
-            <div className="flex flex-col gap-3">
-              <div className="grid grid-cols-1 gap-x-3 gap-y-6 max-sm:grid-cols-1 max-sm:gap-x-1 max-sm:gap-y-1">
-                <div className="">
-                  <FloatingLabel label={
-                    <>
-                      <span>Name <span className='text-red-500'>*</span></span>
-                    </>
-                  }>
-                    <Form.Control
-                      type="text"
-                      autoComplete="name"
-                      placeholder="Name"
-                      name='first_name'
-                      value={data.first_name || ''}
-                      onChange={handleDataChange}
-                    />
-                  </FloatingLabel>
-                  <span className='text-red-500'>{error?.first_name}</span>
-                </div>
-                <div className="">
-                  <FloatingLabel label={
-                    <>
-                      <span>Email <span className='text-red-500'>*</span></span>
-                    </>
-                  }>
-                    <Form.Control
-                      type="email"
-                      autoComplete="email"
-                      placeholder="Email"
-                      name='email'
-                      value={data.email || ''}
-                      onChange={handleDataChange}
-                    />
-                  </FloatingLabel>
-                  <span className='text-red-500'>{error?.email}</span>
-                </div>
-                <div className="">
-                  <FloatingLabel label={
-                    <>
-                      <span>Number <span className='text-red-500'>*</span></span>
-                    </>
-                  }>
-                    <Form.Control
-                      type="number"
-                      autoComplete="number"
-                      placeholder="Phone Number"
-                      name='number'
-                      value={data.number || ''}
-                      onInput={(e) => {
-                        if (e.target.value.length > 10) {
-                          e.target.value = e.target.value.slice(0, 10);
-                        }
-                      }}
-                      onChange={handleDataChange}
-                    />
-                  </FloatingLabel>
-                  <span className='text-red-500'>{error?.number}</span>
+      <div className="relative min-h-screen">
+        <AnimatedBackground intensity="low" />
+        <div className="relative z-10 flex justify-center items-center p-6">
+          <div className="w-full max-w-2xl">
+            <Form onSubmit={handleModalSubmit}>
+              {/* Header */}
+              <div className="mb-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg bounce-icon">
+                    <i className="fa-solid fa-user-plus text-white text-lg"></i>
+                  </div>
+                  <h2 className="text-3xl font-bold gradient-text">
+                    Add New {userToAdd === 'management' ? 'Management' : userToAdd === 'tpo' ? 'TPO' : 'Student'} User
+                  </h2>
                 </div>
               </div>
-              <p className='text-wrap'>
-                <span className="text-red-500">Note: </span>
-                Password will be randomly generated & send to user via mail.
-              </p>
-            </div>
-            <button type="submit" className="my-1 flex items-center px-3 py-2 bg-blue-500 text-white rounded">
-              <GrFormAdd className="mr-2 text-3xl max-sm:text-lg max-sm:mr-0.5" />
-              Create New
-            </button>
-          </Form>
+
+              {/* Form Card */}
+              <GlassCard hoverable={false} glow={true} className="p-6">
+                <div className="flex flex-col gap-4">
+                  <div className="space-y-4">
+                    <div>
+                      <FloatingLabel label={
+                        <>
+                          <span>Name <span className='text-red-500'>*</span></span>
+                        </>
+                      }>
+                        <Form.Control
+                          type="text"
+                          autoComplete="name"
+                          placeholder="Name"
+                          name='first_name'
+                          value={data.first_name || ''}
+                          onChange={handleDataChange}
+                        />
+                      </FloatingLabel>
+                      {error?.first_name && (
+                        <span className='text-red-500 text-sm mt-1 flex items-center gap-1'>
+                          <i className="fa-solid fa-exclamation-circle"></i>
+                          {error.first_name}
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <FloatingLabel label={
+                        <>
+                          <span>Email <span className='text-red-500'>*</span></span>
+                        </>
+                      }>
+                        <Form.Control
+                          type="email"
+                          autoComplete="email"
+                          placeholder="Email"
+                          name='email'
+                          value={data.email || ''}
+                          onChange={handleDataChange}
+                        />
+                      </FloatingLabel>
+                      {error?.email && (
+                        <span className='text-red-500 text-sm mt-1 flex items-center gap-1'>
+                          <i className="fa-solid fa-exclamation-circle"></i>
+                          {error.email}
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <FloatingLabel label={
+                        <>
+                          <span>Phone Number <span className='text-red-500'>*</span></span>
+                        </>
+                      }>
+                        <Form.Control
+                          type="number"
+                          autoComplete="tel"
+                          placeholder="Phone Number"
+                          name='number'
+                          value={data.number || ''}
+                          onInput={(e) => {
+                            if (e.target.value.length > 10) {
+                              e.target.value = e.target.value.slice(0, 10);
+                            }
+                          }}
+                          onChange={handleDataChange}
+                        />
+                      </FloatingLabel>
+                      {error?.number && (
+                        <span className='text-red-500 text-sm mt-1 flex items-center gap-1'>
+                          <i className="fa-solid fa-exclamation-circle"></i>
+                          {error.number}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className='text-sm text-gray-700 flex items-center gap-2'>
+                      <i className="fa-solid fa-info-circle text-blue-500"></i>
+                      <span>
+                        <span className="font-semibold text-blue-600">Note: </span>
+                        Password will be randomly generated & sent to user via email.
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </GlassCard>
+
+              {/* Submit Button */}
+              <div className="flex justify-center mt-6">
+                <button 
+                  type="submit" 
+                  className="gradient-button px-8 py-3 text-lg font-semibold text-white rounded-xl flex items-center gap-2"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
+                    border: 'none'
+                  }}
+                >
+                  <i className="fa-solid fa-user-plus"></i>
+                  Create New User
+                </button>
+              </div>
+            </Form>
+          </div>
         </div>
       </div>
 

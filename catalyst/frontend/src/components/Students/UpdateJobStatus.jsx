@@ -8,6 +8,8 @@ import { Button } from 'react-bootstrap';
 import UploadOfferLetter from './UploadOfferLetter';
 import Toast from '../Toast';
 import ModalBox from '../Modal';
+import AnimatedBackground from '../UI/AnimatedBackground';
+import GlassCard from '../UI/GlassCard';
 import { LiaEye } from "react-icons/lia";
 import { PiEyeClosed } from "react-icons/pi";
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
@@ -221,18 +223,37 @@ function UpdateJobStatus() {
       {
         loading ? (
           <div className="flex justify-center h-72 items-center">
-            <i className="fa-solid fa-spinner fa-spin text-3xl" />
+            <div className="flex flex-col items-center gap-4">
+              <i className="fa-solid fa-spinner fa-spin text-4xl text-blue-500 animate-pulse" />
+              <p className="text-gray-600 font-medium">Loading job details...</p>
+            </div>
           </div>
         ) : (
-          <>
-            <div className="grid grid-cols-2 gap-2 my-6 text-base max-sm:grid-cols-1 max-sm:text-sm">
-              <div className="flex flex-col gap-2">
-                <div className="">
-                  {/* Basic Details  */}
-                  <Accordion defaultActiveKey={['0']} alwaysOpen className='shadow rounded w-full max-sm:w-fit'>
-                    <Accordion.Item eventKey="0">
-                      <Accordion.Header>Basic Details</Accordion.Header>
-                      <Accordion.Body>
+          <div className="relative min-h-screen">
+            {/* Animated Background */}
+            <AnimatedBackground variant="default" intensity="low" />
+            
+            {/* Main Content */}
+            <div className="relative z-10 p-4 sm:p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 my-6 text-base max-sm:text-sm">
+                <div className="flex flex-col gap-2">
+                  <div className="">
+                    {/* Enhanced Basic Details with Custom Glass Card */}
+                    <GlassCard hoverable={true} glow={true} className="p-6 sm:p-8">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg">
+                        <i className="fa-solid fa-user text-white text-lg"></i>
+                      </div>
+                      <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        Basic Details
+                      </h3>
+                    </div>
+                    <Accordion defaultActiveKey={['0']} alwaysOpen className='shadow-lg rounded-xl w-full overflow-hidden'>
+                      <Accordion.Item eventKey="0" className="border-0">
+                        <Accordion.Header className="bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 transition-all duration-300 rounded-t-xl">
+                          <span className="font-semibold text-gray-800">View Details</span>
+                        </Accordion.Header>
+                        <Accordion.Body className="bg-white">
                         <div className="">
                           {/* company name  */}
                           <div className="flex flex-col justify-between py-2">
@@ -291,14 +312,27 @@ function UpdateJobStatus() {
                       </Accordion.Body>
                     </Accordion.Item>
                   </Accordion>
+                    </GlassCard>
+                  </div>
                 </div>
               </div>
               <div className="">
-                {/* Job details  */}
-                <Accordion defaultActiveKey={['1']} alwaysOpen className='shadow rounded w-full max-sm:w-fit'>
-                  <Accordion.Item eventKey="1">
-                    <Accordion.Header>Job Details</Accordion.Header>
-                    <Accordion.Body>
+                {/* Enhanced Job details with Custom Glass Card */}
+                <GlassCard hoverable={true} glow={true} className="p-6 sm:p-8">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 shadow-lg">
+                      <i className="fa-solid fa-briefcase text-white text-lg"></i>
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      Job Details
+                    </h3>
+                  </div>
+                  <Accordion defaultActiveKey={['1']} alwaysOpen className='shadow-lg rounded-xl w-full overflow-hidden'>
+                    <Accordion.Item eventKey="1" className="border-0">
+                      <Accordion.Header className="bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 transition-all duration-300 rounded-t-xl">
+                        <span className="font-semibold text-gray-800">Update Status</span>
+                      </Accordion.Header>
+                      <Accordion.Body className="bg-white">
                       <div className="">
                         <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
                           {/* current round  */}
@@ -454,19 +488,25 @@ function UpdateJobStatus() {
                             )
                           }
                         </div>
-                        <div className="mb-2 mt-3">
-                          <Button variant="primary" onClick={handleSubmit}>
-                            <i className="fa-solid fa-floppy-disk pr-2" />
-                            Update
-                          </Button>
+                        <div className="mb-2 mt-6">
+                          <button
+                            onClick={handleSubmit}
+                            className="group relative overflow-hidden w-full px-6 py-3 text-white font-bold rounded-xl shadow-lg bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-[length:200%_200%] animate-gradient-shift transition-all duration-300 hover:scale-105 hover:shadow-glow-lg active:scale-95 transform flex items-center justify-center gap-3"
+                          >
+                            <i className="fa-solid fa-floppy-disk group-hover:rotate-12 transition-transform duration-300" />
+                            <span>Update Status</span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                          </button>
                         </div>
                       </div>
                     </Accordion.Body>
                   </Accordion.Item>
                 </Accordion>
+                </GlassCard>
               </div>
             </div>
-          </>
+            </div>
+          </div>
         )
       }
 

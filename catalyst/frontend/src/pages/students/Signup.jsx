@@ -158,7 +158,11 @@ function Signup() {
               <input 
                 type="text" 
                 id="inputName" 
-                className="form-control pl-12 pr-4 py-3 w-full rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:ring-4 focus:ring-pink-200 transition-all duration-300 bg-white/80 backdrop-blur-sm" 
+                className="pl-12 pr-4 py-3 w-full rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:ring-4 focus:ring-pink-200 transition-all duration-300 bg-white backdrop-blur-sm text-gray-900 placeholder-gray-500" 
+                style={{ 
+                  color: '#111827',
+                  backgroundColor: '#ffffff'
+                }}
                 placeholder="Full Name" 
                 autoFocus 
                 autoComplete="name" 
@@ -185,7 +189,11 @@ function Signup() {
               <input 
                 type="email" 
                 id="inputEmail" 
-                className="form-control pl-12 pr-4 py-3 w-full rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:ring-4 focus:ring-pink-200 transition-all duration-300 bg-white/80 backdrop-blur-sm" 
+                className="pl-12 pr-4 py-3 w-full rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:ring-4 focus:ring-pink-200 transition-all duration-300 bg-white backdrop-blur-sm text-gray-900 placeholder-gray-500" 
+                style={{ 
+                  color: '#111827',
+                  backgroundColor: '#ffffff'
+                }}
                 placeholder="Email Address" 
                 autoComplete="email" 
                 name="email" 
@@ -211,7 +219,11 @@ function Signup() {
               <input
                 type="number"
                 id="inputNumber"
-                className="form-control pl-12 pr-4 py-3 w-full rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:ring-4 focus:ring-pink-200 transition-all duration-300 bg-white/80 backdrop-blur-sm"
+                className="pl-12 pr-4 py-3 w-full rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:ring-4 focus:ring-pink-200 transition-all duration-300 bg-white backdrop-blur-sm text-gray-900 placeholder-gray-500"
+                style={{ 
+                  color: '#111827',
+                  backgroundColor: '#ffffff'
+                }}
                 placeholder="Phone Number (10 digits)"
                 autoComplete="tel"
                 name="number"
@@ -241,7 +253,11 @@ function Signup() {
               <input 
                 type={isEyeOpen ? "text" : "password"} 
                 id="inputPassword" 
-                className="form-control pl-12 pr-12 py-3 w-full rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:ring-4 focus:ring-pink-200 transition-all duration-300 bg-white/80 backdrop-blur-sm" 
+                className="pl-12 pr-12 py-3 w-full rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:ring-4 focus:ring-pink-200 transition-all duration-300 bg-white backdrop-blur-sm text-gray-900 placeholder-gray-500" 
+                style={{ 
+                  color: '#111827',
+                  backgroundColor: '#ffffff'
+                }}
                 placeholder="Password" 
                 autoComplete="new-password" 
                 name="password" 

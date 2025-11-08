@@ -13,6 +13,7 @@ function ResumeFilter() {
   const [selectedJob, setSelectedJob] = useState('');
   const [filterResults, setFilterResults] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingJobs, setLoadingJobs] = useState(true);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
@@ -21,15 +22,27 @@ function ResumeFilter() {
   }, []);
 
   const fetchJobs = async () => {
+    setLoadingJobs(true);
     try {
       const response = await axios.get(`${BASE_URL}/tpo/jobs`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
-      setJobs(response.data.jobs || []);
+      // Backend returns { data: jobs }, so use response.data.data
+      const jobsData = response.data.data || response.data.jobs || [];
+      console.log('Fetched jobs:', jobsData); // Debug log
+      setJobs(jobsData);
+      if (jobsData.length === 0) {
+        setToastMessage('No jobs found. Please post a job first.');
+        setShowToast(true);
+      }
     } catch (error) {
-      console.error('Error fetching jobs:', error);
+      console.error('Error fetching jobs:', error.response?.data || error);
+      setToastMessage(error.response?.data?.msg || 'Error loading jobs. Please refresh the page.');
+      setShowToast(true);
+    } finally {
+      setLoadingJobs(false);
     }
   };
 
@@ -41,6 +54,7 @@ function ResumeFilter() {
     }
 
     setLoading(true);
+    setFilterResults(null); // Clear previous results
     try {
       const response = await axios.post(
         `${BASE_URL}/ai/resume/filter`,
@@ -51,13 +65,30 @@ function ResumeFilter() {
           }
         }
       );
-      setFilterResults(response.data);
-      setToastMessage('Resumes filtered successfully!');
+      
+      if (response.data.filteredResults && response.data.filteredResults.length > 0) {
+        setFilterResults(response.data);
+        setToastMessage('Resumes filtered successfully!');
+      } else if (response.data.msg) {
+        setToastMessage(response.data.msg);
+        setFilterResults({
+          totalApplicants: 0,
+          filteredResults: [],
+          shortlisted: 0,
+          maybe: 0,
+          rejected: 0
+        });
+      } else {
+        setFilterResults(response.data);
+        setToastMessage('Resumes filtered successfully!');
+      }
       setShowToast(true);
     } catch (error) {
-      setToastMessage('Error filtering resumes');
+      const errorMsg = error.response?.data?.msg || error.response?.data?.error || 'Error filtering resumes. Please try again.';
+      setToastMessage(errorMsg);
       setShowToast(true);
-      console.error('Error filtering resumes:', error);
+      console.error('Error filtering resumes:', error.response?.data || error);
+      setFilterResults(null);
     } finally {
       setLoading(false);
     }
@@ -94,20 +125,28 @@ function ResumeFilter() {
             <Form.Select
               value={selectedJob}
               onChange={(e) => setSelectedJob(e.target.value)}
+              disabled={loadingJobs}
             >
-              <option value="">Select a job to filter resumes</option>
+              <option value="">
+                {loadingJobs ? 'Loading jobs...' : jobs.length === 0 ? 'No jobs available' : 'Select a job to filter resumes'}
+              </option>
               {jobs.map(job => (
                 <option key={job._id} value={job._id}>
-                  {job.jobTitle} - {job.company?.companyName || 'Unknown'}
+                  {job.jobTitle} - {job.company?.companyName || job.company || 'Unknown'}
                 </option>
               ))}
             </Form.Select>
           </FloatingLabel>
+          {jobs.length === 0 && !loadingJobs && (
+            <p className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>
+              No jobs found. Please post a job first in the Job Listings section.
+            </p>
+          )}
           <Button
             variant="primary"
             className="mt-4"
             onClick={filterResumes}
-            disabled={loading || !selectedJob}
+            disabled={loading || !selectedJob || loadingJobs}
           >
             {loading ? 'Filtering...' : 'Filter Resumes'}
           </Button>
@@ -117,21 +156,21 @@ function ResumeFilter() {
           <>
             {/* Summary Stats */}
             <div className="grid grid-cols-4 gap-4 mb-6">
-              <div className="bg-blue-50 p-4 rounded-lg text-center">
-                <h3 className="text-sm text-gray-600">Total Applicants</h3>
-                <p className="text-2xl font-bold">{filterResults.totalApplicants}</p>
+              <div className="p-4 rounded-lg text-center backdrop-blur-xl border-2" style={{ background: 'rgba(59, 130, 246, 0.1)', borderColor: 'rgba(59, 130, 246, 0.2)' }}>
+                <h3 className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Total Applicants</h3>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>{filterResults.totalApplicants}</p>
               </div>
-              <div className="bg-green-50 p-4 rounded-lg text-center">
-                <h3 className="text-sm text-gray-600">Shortlisted</h3>
-                <p className="text-2xl font-bold">{filterResults.shortlisted}</p>
+              <div className="p-4 rounded-lg text-center backdrop-blur-xl border-2" style={{ background: 'rgba(34, 197, 94, 0.1)', borderColor: 'rgba(34, 197, 94, 0.2)' }}>
+                <h3 className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Shortlisted</h3>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-success)' }}>{filterResults.shortlisted}</p>
               </div>
-              <div className="bg-yellow-50 p-4 rounded-lg text-center">
-                <h3 className="text-sm text-gray-600">Maybe</h3>
-                <p className="text-2xl font-bold">{filterResults.maybe}</p>
+              <div className="p-4 rounded-lg text-center backdrop-blur-xl border-2" style={{ background: 'rgba(234, 179, 8, 0.1)', borderColor: 'rgba(234, 179, 8, 0.2)' }}>
+                <h3 className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Maybe</h3>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-warning)' }}>{filterResults.maybe}</p>
               </div>
-              <div className="bg-red-50 p-4 rounded-lg text-center">
-                <h3 className="text-sm text-gray-600">Rejected</h3>
-                <p className="text-2xl font-bold">{filterResults.rejected}</p>
+              <div className="p-4 rounded-lg text-center backdrop-blur-xl border-2" style={{ background: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.2)' }}>
+                <h3 className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Rejected</h3>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-error)' }}>{filterResults.rejected}</p>
               </div>
             </div>
 
