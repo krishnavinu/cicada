@@ -233,6 +233,23 @@ const seedData = async () => {
     );
     console.log('TPO Admin created:', tpo.email, 'Password: tpo123');
 
+    // Create Super Admin
+    const superAdminPassword = await bcrypt.hash('admin123', 10);
+    const superAdmin = await User.findOneAndUpdate(
+      { email: 'admin@cpms.com' },
+      {
+        first_name: 'Super',
+        last_name: 'Admin',
+        email: 'admin@cpms.com',
+        password: superAdminPassword,
+        role: 'superuser',
+        number: 9876543210,
+        isProfileCompleted: true
+      },
+      { upsert: true, new: true }
+    );
+    console.log('Super Admin created:', superAdmin.email, 'Password: admin123');
+
     // Create HOD users
     const hodPassword = await bcrypt.hash('hod123', 10);
     const departments = ['Computer', 'Civil', 'ECS', 'AIDS', 'Mechanical'];
@@ -725,6 +742,7 @@ const seedData = async () => {
 
     console.log('\n✅ Seed data created successfully!');
     console.log('\n📋 Login Credentials:');
+    console.log('Super Admin: admin@cpms.com / admin123');
     console.log('TPO: tpo@cpms.com / tpo123');
     console.log('HOD: hod.computer@cpms.com / hod123 (or hod.{department}@cpms.com)');
     console.log('Management: management@cpms.com / mgmt123');

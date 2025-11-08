@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Logo from '../../assets/catalyst.png';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
@@ -10,6 +10,16 @@ function LandingNavbar() {
   const [buttonSize, setButtonSize] = useState('lg');
   const [logoText, setLogoText] = useState('catalyst');
   const [showLoginDropdown, setShowLoginDropdown] = useState(false);
+  const dropdownTimeoutRef = useRef(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (dropdownTimeoutRef.current) {
+        clearTimeout(dropdownTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +49,22 @@ function LandingNavbar() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const handleMouseEnter = () => {
+    // Clear any pending close timeout
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+      dropdownTimeoutRef.current = null;
+    }
+    setShowLoginDropdown(true);
+  };
+
+  const handleMouseLeave = () => {
+    // Set a delay before closing (300ms) to allow mouse to reach dropdown
+    dropdownTimeoutRef.current = setTimeout(() => {
+      setShowLoginDropdown(false);
+    }, 300);
+  };
 
   return (
     <header
@@ -82,15 +108,24 @@ function LandingNavbar() {
             <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </Button>
           
-          {/* Login Dropdown with smooth animation */}
-          <div className="relative">
+          {/* Login Dropdown with improved hover handling */}
+          <div 
+            className="relative"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
             <Button
               variant="outline-primary"
               size={buttonSize}
               className="relative overflow-hidden transition-all duration-300 hover:scale-110 hover:shadow-xl hover:-translate-y-1 px-3 md:w-32 group border-2"
-              onClick={() => setShowLoginDropdown(!showLoginDropdown)}
-              onMouseEnter={() => setShowLoginDropdown(true)}
-              onMouseLeave={() => setShowLoginDropdown(false)}
+              onClick={() => {
+                setShowLoginDropdown(!showLoginDropdown);
+                // Clear timeout when clicking
+                if (dropdownTimeoutRef.current) {
+                  clearTimeout(dropdownTimeoutRef.current);
+                  dropdownTimeoutRef.current = null;
+                }
+              }}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 Login
@@ -100,10 +135,8 @@ function LandingNavbar() {
             </Button>
             {showLoginDropdown && (
               <div 
-                className={`absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-md rounded-xl shadow-2xl py-2 z-50 border border-gray-200 animate-scaleIn origin-top-right`}
+                className="absolute right-0 top-full pt-1 w-56 bg-white/95 backdrop-blur-md rounded-xl shadow-2xl py-2 z-50 border border-gray-200 animate-scaleIn origin-top-right"
                 style={{ animation: 'scaleIn 0.2s ease-out' }}
-                onMouseEnter={() => setShowLoginDropdown(true)}
-                onMouseLeave={() => setShowLoginDropdown(false)}
               >
                 <button
                   onClick={() => {

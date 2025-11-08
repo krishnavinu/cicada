@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import Logo from '../../assets/CPMS.png';
+import Logo from '../../assets/catalyst.png';
 import isAuthenticated from '../../utility/auth.utility';
 import Toast from '../../components/Toast';
 import { Button } from 'react-bootstrap';
@@ -139,7 +139,7 @@ function LoginSuperUser() {
               {isLoading ? 'Loading...' : 'Log In'}
             </Button>
           </div>
-          <p className="text-muted text-center text-gray-400">© College Placement Management System 2024 - 25</p>
+          <p className="text-muted text-center text-gray-400">© catalyst 2024 - 25</p>
         </form>
       </div>
     </>
