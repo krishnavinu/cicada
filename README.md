@@ -42,6 +42,7 @@ catalyst provides an all-in-one, AI-powered placement management platform that a
 - [AI Tools Used](#-ai-tools-used)
 - [Setup and Run Instructions](#-setup-and-run-instructions)
 - [Key Features](#-key-features)
+  - [UI/UX Enhancements](#-uiux-enhancements)
   - [Core Features](#core-features)
   - [AI-Powered Features](#ai-powered-features)
 - [Tech Stack](#-tech-stack)
@@ -54,6 +55,10 @@ catalyst provides an all-in-one, AI-powered placement management platform that a
 - [Environment Variables](#-environment-variables)
 - [Usage](#-usage)
 - [Deployment](#-deployment)
+- [Design & UI/UX Features](#-design--uiux-features)
+  - [Landing Page Enhancements](#landing-page-enhancements)
+  - [Design System Components](#design-system-components)
+  - [Recent Improvements](#recent-improvements)
 - [Acknowledgments](#-acknowledgments)
 
 ---
@@ -66,9 +71,11 @@ catalyst provides an all-in-one, AI-powered placement management platform that a
 
 - 🤖 **AI-Powered Insights**: Leverage advanced AI for interview simulation, placement prediction, and career matching
 - 📊 **Data-Driven Decisions**: Comprehensive analytics and reporting for administrators
-- 🎨 **Modern UI/UX**: Beautiful, responsive interface with theme customization
+- 🎨 **Modern UI/UX**: Beautiful, responsive interface with glassmorphic design, custom animations, and theme-aware components
+- 🎭 **Enhanced Landing Page**: Engaging pre-login experience with features showcase, stats, testimonials, and interactive demos
 - 🔒 **Secure & Scalable**: Built with security best practices and scalable architecture
 - 🚀 **All-in-One Platform**: Complete solution from job posting to offer letter management
+- ✨ **Custom Design System**: Reusable UI components with Tailwind CSS, Framer Motion animations, and glassmorphic effects
 
 ---
 
@@ -296,27 +303,54 @@ For detailed setup instructions, see the [Installation](#-installation) section 
 
 ## ✨ Key Features
 
+### 🎨 UI/UX Enhancements
+
+#### Modern Landing Page
+- **Enhanced Hero Section**: Animated background with gradient mesh, floating orbs, and particles
+- **Features Showcase**: Interactive feature cards with glassmorphic design and hover effects
+- **Statistics Section**: Animated counters showing platform metrics (students, companies, placement rate, satisfaction)
+- **Demo/Preview Section**: Interactive tabbed interface showcasing platform features
+- **Testimonials Carousel**: Auto-rotating testimonials with smooth animations
+- **Enhanced About Section**: Role-based cards with gradient effects and animations
+- **Responsive Design**: Fully responsive across all devices (mobile, tablet, desktop)
+
+#### Design System
+- **Glassmorphic Components**: Reusable glass cards with backdrop blur and transparency effects
+- **Custom Animations**: Framer Motion animations for smooth transitions and micro-interactions
+- **Theme-Aware Components**: All components adapt to light/dark themes using CSS variables
+- **Tailwind CSS Integration**: Custom utility classes, gradients, shadows, and animations
+- **Animated Backgrounds**: Particle effects, mesh gradients, and floating orbs
+- **Enhanced Input Fields**: Improved text visibility, focus states, and placeholder styling
+
+#### Login Pages
+- **Consistent Design**: Unified design across all login pages (Student, TPO, Management, HOD, Super Admin)
+- **Enhanced Animations**: Gradient text, animated underlines, shimmer effects
+- **Improved UX**: Better input field styling, error messages, and loading states
+- **Accessibility**: High contrast text, clear focus indicators, and proper form validation
+
 ### Core Features
 
 #### 👨‍🎓 Student Portal
 - **Profile Management**: Complete profile with academic details, skills, and achievements
-- **Resume Builder**: Drag-and-drop resume builder with multiple professional templates
+- **Resume Builder**: Drag-and-drop resume builder with multiple professional templates and AI suggestions
 - **Job Applications**: Browse, search, and apply for job opportunities
 - **Application Tracking**: Real-time status updates for all applications
 - **Placement Drives**: Register and participate in campus placement drives
 - **Internship Management**: Track and manage internship applications
 - **Publications**: Add research papers and publications with weightage
 - **Notifications**: Real-time notifications for new jobs, interviews, and updates
+- **Enhanced Dashboard**: Modern dashboard with animated cards, statistics, and quick actions
 
 #### 👔 TPO Admin Portal
-- **Job Management**: Post, edit, and manage job listings
+- **Job Management**: Post, edit, and manage job listings with rich text editor
 - **Application Review**: Review and manage student applications
 - **Interview Scheduling**: Schedule and manage interview rounds
 - **Offer Letters**: Upload and manage offer letters
 - **Placement Drives**: Create and manage placement drives
 - **Email Generation**: AI-powered email templates for notifications
-- **Resume Filtering**: AI-assisted resume screening
+- **Resume Filtering**: AI-assisted resume screening with match scores
 - **Reports**: Generate comprehensive placement reports
+- **Enhanced Forms**: Modern form components with validation and error handling
 
 #### 🏛️ Management Portal
 - **Analytics Dashboard**: Visual analytics and insights
@@ -419,18 +453,22 @@ For detailed setup instructions, see the [Installation](#-installation) section 
 - **Build Tool**: Vite 5.4+
 - **Routing**: React Router DOM 6.26+
 - **Styling**: 
-  - Tailwind CSS 3.4+
+  - Tailwind CSS 3.4+ (with custom components and animations)
   - Bootstrap 5.3+
-  - Custom Theme System
+  - Custom Theme System with CSS variables
+  - Glassmorphic design components
+- **Animations**: Framer Motion 11.0+ (smooth transitions and micro-interactions)
 - **State Management**: React Context API
 - **HTTP Client**: Axios 1.7+
 - **UI Components**: 
   - React Bootstrap 2.10+
   - React Icons 5.3+
+  - Custom UI Components (GlassCard, AnimatedBackground, Button, Card, Input, Skeleton, EmptyState)
 - **Charts**: Recharts 3.3+
 - **Drag & Drop**: React DnD 16.0+
 - **PDF Generation**: jsPDF 3.0+, html2canvas 1.4+
 - **Print**: react-to-print 3.2+
+- **Editor**: Jodit React 3.0+ (rich text editor)
 
 ### Backend
 - **Runtime**: Node.js
@@ -484,7 +522,19 @@ catalyst/
 │   │   │   │   ├── LandNavbar.jsx
 │   │   │   │   ├── LandHeroPage.jsx
 │   │   │   │   ├── LandAbout.jsx
+│   │   │   │   ├── LandFeatures.jsx
+│   │   │   │   ├── LandStats.jsx
+│   │   │   │   ├── LandDemo.jsx
+│   │   │   │   ├── LandTestimonials.jsx
 │   │   │   │   └── LandFooter.jsx
+│   │   │   ├── UI/
+│   │   │   │   ├── AnimatedBackground.jsx
+│   │   │   │   ├── GlassCard.jsx
+│   │   │   │   ├── Button.jsx
+│   │   │   │   ├── Card.jsx
+│   │   │   │   ├── Input.jsx
+│   │   │   │   ├── Skeleton.jsx
+│   │   │   │   └── EmptyState.jsx
 │   │   │   ├── PlacementDrive/
 │   │   │   │   ├── CreateDrive.jsx
 │   │   │   │   ├── DriveList.jsx
@@ -803,7 +853,22 @@ After running the seed script, you can use:
 - **Student**: Use the credentials created during registration
 - **TPO**: Check seed data for TPO credentials
 - **Management**: Check seed data for Management credentials
-- **Super Admin**: Check seed data for Super Admin credentials
+- **HOD**: 
+  - Email: `hod@cpms.com`
+  - Password: `hod123`
+- **Super Admin**: 
+  - Email: `admin@cpms.com`
+  - Password: `admin123`
+
+### Creating HOD User
+
+If HOD login is not working, you can create a HOD user by running:
+```bash
+cd backend
+node scripts/createHODUser.js
+```
+
+This will create/update a HOD user with the credentials above.
 
 ### Key Workflows
 
@@ -850,6 +915,90 @@ Refer to the `kubernetes/` directory for Kubernetes deployment manifests.
 
 ---
 
+## 🎨 Design & UI/UX Features
+
+### Landing Page Enhancements
+
+#### Hero Section
+- Animated gradient background with floating orbs and particles
+- Gradient text animation for brand name
+- Email signup form with enhanced styling
+- Feature highlights with badges (AI-Powered, Fast & Easy, 100% Free, Secure)
+- Smooth scroll indicators and call-to-action buttons
+
+#### Features Section
+- 8 feature cards showcasing platform capabilities
+- Glassmorphic card design with hover effects
+- Gradient icons and animated transitions
+- Responsive grid layout (1/2/4 columns)
+- Call-to-action section with gradient buttons
+
+#### Statistics Section
+- Animated counters (10,000+ Students, 500+ Companies, 85% Placement Rate, 95% Satisfaction)
+- Smooth counting animations with easing
+- Progress bars with gradient fills
+- Glass cards with hover effects
+
+#### Demo/Preview Section
+- Interactive tabbed interface (Resume Builder, Interview Simulator, Analytics Dashboard, Job Marketplace)
+- Mock previews with floating elements
+- Feature lists with checkmark icons
+- Smooth transitions between tabs
+
+#### Testimonials Section
+- Auto-rotating carousel (4 testimonials)
+- Star ratings display
+- Navigation arrows and dot indicators
+- Smooth slide animations
+- Glass cards with gradients
+
+### Design System Components
+
+#### Custom UI Components
+- **GlassCard**: Glassmorphic card with hover effects, glow, and gradient borders
+- **AnimatedBackground**: Particle effects, mesh gradients, and floating orbs
+- **Button**: Reusable button with variants, loading states, and icons
+- **Card**: Glassmorphic card with hover effects and variants
+- **Input**: Enhanced input with focus states, password toggle, and error handling
+- **Skeleton**: Loading skeleton for various content types
+- **EmptyState**: Empty state component for displaying when no data is available
+
+#### Animation System
+- **Framer Motion**: Smooth transitions, hover effects, and entrance animations
+- **Custom Keyframes**: Shimmer, gradient shift, glow pulse, particle float, mesh gradient
+- **Tailwind Animations**: Float, bounce, scale, slide, ripple effects
+- **Performance Optimized**: Using `whileInView` and `once` triggers for efficient rendering
+
+#### Theme System
+- **CSS Variables**: Theme-aware colors using `var(--color-primary)`, `var(--color-text)`, etc.
+- **Light/Dark Theme Support**: All components adapt to theme changes
+- **Consistent Color Palette**: Unified color scheme across all pages
+- **Accessibility**: High contrast ratios and proper color combinations
+
+### Recent Improvements
+
+#### Login Pages
+- ✅ Unified design across all login pages (Student, TPO, Management, HOD, Super Admin)
+- ✅ Enhanced animated backgrounds with gradient mesh and particles
+- ✅ Improved input field styling with better text visibility
+- ✅ Gradient buttons with shimmer effects
+- ✅ Smooth animations and transitions
+- ✅ Responsive design for all screen sizes
+
+#### Form Improvements
+- ✅ Fixed text visibility issues in input fields
+- ✅ Enhanced placeholder styling
+- ✅ Better error message display
+- ✅ Improved focus states and validation feedback
+- ✅ Consistent styling across all forms
+
+#### Component Enhancements
+- ✅ Glassmorphic design system implementation
+- ✅ Custom Tailwind components and utilities
+- ✅ Framer Motion animations integration
+- ✅ Theme-aware component styling
+- ✅ Improved loading states and error handling
+
 ## 🙏 Acknowledgments
 
 We would like to express our gratitude to the following platforms, tools, and services that made this project possible:
@@ -871,8 +1020,17 @@ We would like to express our gratitude to the following platforms, tools, and se
 - **React.js** for building modern, interactive user interfaces
 - **Node.js** for server-side JavaScript runtime
 - **Express.js** for robust backend API framework
-- **Tailwind CSS** for utility-first CSS framework
+- **Tailwind CSS** for utility-first CSS framework and custom design system
 - **Bootstrap** for responsive UI components
+- **Framer Motion** for smooth animations and micro-interactions
+- **React Router DOM** for client-side routing
+- **Axios** for HTTP client requests
+
+### Design Inspiration
+- **Glassmorphism Design**: Modern glassmorphic UI trends
+- **Neumorphism**: Soft UI design principles
+- **Material Design**: Google's material design guidelines
+- **Modern Web Design**: Contemporary web design patterns and best practices
 
 ### Open Source Community
 - All open-source contributors and library maintainers
