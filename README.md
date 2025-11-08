@@ -208,7 +208,7 @@ Before starting, ensure you have the following installed:
 1. **Clone the Repository**
    ```bash
    git clone <repository-url>
-   cd college-placement-management-system
+   cd catalyst
    ```
 
 2. **Backend Setup**
@@ -458,7 +458,7 @@ For detailed setup instructions, see the [Installation](#-installation) section 
 ## 📁 Project Structure
 
 ```
-college-placement-management-system/
+catalyst/
 ├── frontend/
 │   ├── public/
 │   │   ├── catalyst.svg
