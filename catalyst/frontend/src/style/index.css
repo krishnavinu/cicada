@@ -1,0 +1,680 @@
+/* tailwind css  */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.dancing {
+  font-family: "Dancing Script", cursive;
+}
+
+.playfair {
+  font-family: "Playfair Display", serif;
+}
+
+.roboto {
+  font-family: "Roboto", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+/* Theme Variables */
+:root {
+  --color-primary: #667eea;
+  --color-secondary: #764ba2;
+  --color-accent: #f093fb;
+  --color-background: #ffffff;
+  --color-surface: #f8f9fa;
+  --color-text: #1a202c;
+  --color-text-secondary: #4a5568;
+  --color-border: #e2e8f0;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #06b6d4;
+  --font-primary: 'Inter', sans-serif;
+  --font-secondary: 'Poppins', sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
+  --app-font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--app-font-family);
+  scroll-behavior: smooth;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Global link colors */
+a:not(.no-theme-link) {
+  color: var(--color-primary);
+  transition: color 0.3s ease;
+}
+
+a:not(.no-theme-link):hover {
+  color: var(--color-secondary);
+}
+
+/* Ensure all text uses theme colors by default */
+p, span, div, h1, h2, h3, h4, h5, h6, li, td, th, label {
+  color: inherit;
+}
+
+/* Smooth transitions for all interactive elements */
+button, a, input, select, textarea {
+  transition: all 0.3s ease;
+}
+
+/* Page transition animations */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: pageFadeIn 0.3s ease-out;
+}
+
+/* Route transition wrapper */
+.route-wrapper {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  border-radius: 10px;
+  border: 2px solid var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+  border-color: var(--color-border);
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Theme-aware glass for dark mode */
+body:has(.theme-dark) .glass,
+.theme-dark .glass {
+  background: rgba(26, 21, 31, 0.7);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hover lift effect */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Shimmer effect */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Button glow effect */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-glow:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Enhanced Button Styles */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-family: var(--app-font-family);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  border: none;
+  color: #ffffff; /* White text works on colored gradient buttons */
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(var(--color-primary-rgb), 0.4);
+  color: #ffffff;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--color-success) 0%, #047857 100%);
+  border: none;
+  color: #ffffff; /* White text on green buttons */
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #047857 0%, var(--color-success) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(5, 150, 105, 0.4);
+  color: #ffffff;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--color-error) 0%, #b91c1c 100%);
+  border: none;
+  color: #ffffff; /* White text on red buttons */
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, var(--color-error) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4);
+  color: #ffffff;
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, var(--color-warning) 0%, #b45309 100%);
+  border: none;
+  color: #ffffff; /* White text on orange/yellow buttons */
+}
+
+.btn-warning:hover {
+  background: linear-gradient(135deg, #b45309 0%, var(--color-warning) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(217, 119, 6, 0.4);
+  color: #ffffff;
+}
+
+.btn-info {
+  background: linear-gradient(135deg, var(--color-info) 0%, #0369a1 100%);
+  border: none;
+  color: #ffffff; /* White text on blue buttons */
+}
+
+.btn-info:hover {
+  background: linear-gradient(135deg, #0369a1 0%, var(--color-info) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(2, 132, 199, 0.4);
+  color: #ffffff;
+}
+
+/* Theme-aware utility classes */
+.text-theme-primary {
+  color: var(--color-primary);
+}
+
+.text-theme-secondary {
+  color: var(--color-secondary);
+}
+
+.bg-theme-surface {
+  background-color: var(--color-surface);
+}
+
+.bg-theme-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-theme-secondary {
+  background-color: var(--color-secondary);
+}
+
+.bg-theme-background {
+  background-color: var(--color-background);
+}
+
+.border-theme {
+  border-color: var(--color-border);
+}
+
+.border-theme-primary {
+  border-color: var(--color-primary);
+}
+
+/* Gradient utilities */
+.bg-gradient-theme {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+
+.text-gradient-theme {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hover utilities */
+.hover-bg-theme-surface:hover {
+  background-color: var(--color-surface) !important;
+}
+
+.hover-text-theme-primary:hover {
+  color: var(--color-primary) !important;
+}
+
+/* Button ripple effect */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Enhanced Form Controls */
+.form-control {
+  transition: all 0.3s ease;
+  border-radius: 0.5rem;
+  border: 2px solid var(--color-border) !important;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-background) !important;
+  color: var(--color-text) !important;
+}
+
+.form-control:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb, 102, 126, 234), 0.1) !important;
+  outline: none;
+  background-color: var(--color-background) !important;
+  color: var(--color-text) !important;
+}
+
+.form-control:hover:not(:focus) {
+  border-color: var(--color-border) !important;
+}
+
+.form-control::placeholder {
+  color: var(--color-text-secondary) !important;
+  opacity: 0.7;
+}
+
+/* FloatingLabel text color - Bootstrap override */
+.floating-label,
+.form-floating label,
+.form-floating > label {
+  color: var(--color-text-secondary) !important;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select ~ label {
+  color: var(--color-primary) !important;
+  opacity: 1 !important;
+}
+
+.form-floating > label {
+  opacity: 0.85 !important;
+}
+
+/* Input with icon */
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-secondary);
+  transition: color 0.3s ease;
+}
+
+.input-with-icon input:focus + i,
+.input-with-icon input:not(:placeholder-shown) + i {
+  color: var(--color-primary);
+}
+
+/* Enhanced Table */
+.table {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background-color: var(--color-surface) !important;
+  color: var(--color-text) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+.table thead {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%) !important;
+  color: #ffffff !important; /* White text on colored gradient header */
+}
+
+.table thead th {
+  border: none !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+  padding: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  font-family: var(--font-heading);
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+.table tbody {
+  background-color: var(--color-background) !important;
+}
+
+.table tbody tr {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid var(--color-border) !important;
+  background-color: var(--color-background) !important;
+  color: var(--color-text) !important;
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: var(--color-surface) !important;
+}
+
+.table tbody tr:hover {
+  background: linear-gradient(90deg, rgba(var(--color-primary-rgb), 0.1) 0%, rgba(var(--color-secondary-rgb), 0.1) 100%) !important;
+  transform: scale(1.01);
+  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.15);
+}
+
+.table tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+  color: var(--color-text) !important;
+  background-color: transparent !important;
+  border-color: var(--color-border) !important;
+}
+
+/* Bootstrap table overrides */
+.table-striped > tbody > tr:nth-of-type(odd) > td,
+.table-striped > tbody > tr:nth-of-type(odd) > th {
+  background-color: var(--color-background) !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(even) > td,
+.table-striped > tbody > tr:nth-of-type(even) > th {
+  background-color: var(--color-surface) !important;
+}
+
+.table-bordered {
+  border: 1px solid var(--color-border) !important;
+}
+
+.table-bordered td,
+.table-bordered th {
+  border: 1px solid var(--color-border) !important;
+}
+
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th {
+  background-color: rgba(var(--color-primary-rgb), 0.1) !important;
+  color: var(--color-text) !important;
+}
+
+/* Override Bootstrap's default white backgrounds for table cells */
+.table td,
+.table th {
+  background-color: inherit !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) td,
+.table-striped tbody tr:nth-of-type(odd) th {
+  background-color: var(--color-background) !important;
+}
+
+.table-striped tbody tr:nth-of-type(even) td,
+.table-striped tbody tr:nth-of-type(even) th {
+  background-color: var(--color-surface) !important;
+}
+
+/* Enhanced Cards */
+.card {
+  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-primary);
+}
+
+.card-header {
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-border) 100%);
+  border-bottom: 2px solid var(--color-border);
+  padding: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  font-family: var(--font-heading);
+}
+
+.card-body {
+  padding: 1.5rem;
+  color: var(--color-text);
+}
+
+/* Loading skeleton */
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200px 100%;
+}
+
+/* custom sidebar scroll bar  */
+
+/* Initially hide the scrollbar */
+.sidebar-nav::-webkit-scrollbar {
+  width: 0;
+  /* Set width to 0 to hide the scrollbar */
+  height: 0;
+  /* For horizontal scrollbar, if any */
+}
+
+/* On hover or scroll, show the scrollbar */
+.sidebar-nav:hover::-webkit-scrollbar {
+  width: 4px;
+  /* Adjust the width when visible */
+  height: 4px;
+  /* For horizontal scrollbar, if any */
+}
+
+/* Track */
+.sidebar-nav::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Handle */
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* custom sidebar scroll bar  */
+
+
+/* input type number disable arrow  */
+/* Hide the arrows for number input in Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide the arrows for number input in Firefox */
+/* input[type=number] {
+  -moz-appearance: textfield;
+} */
+
+/* input type number disable arrow  */
+
+
+
+/* Sidebar content remains visible */
+.sidebar-content {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.sidebar-content::-webkit-scrollbar {
+  width: 6px;
+  transition: width 0.3s ease;
+}
+
+.navbar-container:hover .sidebar-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.navbar-container:hover .sidebar-content {
+  scrollbar-width: thin;
+}
+
+/* Customize scrollbar thumb */
+.sidebar-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Ensure bottom profile section is always visible */
+.bottom-profile-section {
+  flex-shrink: 0 !important;
+  position: relative !important;
+  z-index: 10 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+
+/* Page transition */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.page-transition-exit {
+  opacity: 1;
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
